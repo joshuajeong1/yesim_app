@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:17.5
+    container_name: dev_postgress
+    restart: always
+    environment:
+      POSTGRES_USER: joshjeong
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: yesim_data
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
