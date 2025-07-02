@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -47,4 +46,6 @@ model HoursWorked {
   payPeriod   PayPeriod @relation(fields: [payPeriodId], references: [id])
   payPeriodId Int
   totalHours  Float
+
+  @@unique([userId, payPeriodId])
 }

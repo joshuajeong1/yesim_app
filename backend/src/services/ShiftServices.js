@@ -1,0 +1,87 @@
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+
+export async function removeShift(shiftId) {
+    try {
+        const deletedShift = await prisma.shift.findUnique({
+            where: {
+                id: shiftId,
+            },
+        });
+
+        if(!deletedShift) {
+            console.log("Shift not found.");
+            throw "Shift not found";
+        }
+
+        await prisma.shift.delete({
+            where: {
+                id: shiftId,
+            },
+        });
+
+        await recalculateHoursWorked(deletedShift.userId, deletedShift.startTime, deletedShift.endTime);
+        console.log("Shift deleted: ", deletedShift);
+        return deletedShift;
+    }
+    catch (error) {
+        console.error("Error deleting shift: ", error);
+        throw error;
+    }
+}
+
+export async function addShift(shiftData) {
+    const { userId, startTime, endTime } = req.body;
+
+    const shift = await prisma.shift.create({
+        data: {
+            userId,
+            startTime: new Date(startTime),
+            endTime: new Date(endTime),
+        },
+    });
+    recalculateHoursWorked(userId, shift.startTime, shift.endTime);
+    
+    return shift;
+}
+
+async function recalculateHoursWorked(userId, startTime, endTime) {
+    const payPeriods = await prisma.payPeriod.findMany({
+        where: {
+            startDate: { lte: endTime },
+            endDate: { gte: startTime },
+        },
+    });
+
+    for (const period of payPeriods) {
+        const totalHours = await calcTotalHours(userId, period);
+        await prisma.hoursWorked.upsert({
+            where: {
+                userId_payPeriodId: {
+                    userId,
+                    payPeriodId: period.id
+                },
+            },
+            update: { totalHours },
+            create: {
+                userId,
+                payPeriodId: period.id,
+                totalHours,
+            },
+        });
+    }
+}
+async function calcTotalHours(userId, period) {
+    const shifts = await prisma.shift.findMany({
+        where: {
+            userId,
+            startTime: { gte: period.startDate },
+            endTime: { lte: period.endDate },
+        },
+    });
+    let totalHours = 0;
+    for ( const shift of shifts) {
+        totalHours += (shift.endTime - shift.startTime) / (1000 * 60 * 60);
+    }
+    return totalHours;
+}
