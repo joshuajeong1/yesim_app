@@ -1,6 +1,25 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
+export async function getAllShifts(startDate, endDate) {
+    return prisma.shift.findMany({
+        where: {
+            startTime: { gte: startDate },
+            endTime: { lte: endDate },
+        },
+        include: {
+            user: {
+                select: {
+                    username: true,
+                },
+            },
+        },
+        orderBy: {
+            startTime: 'asc',
+        },
+    })
+}
+
 export async function removeShift(shiftId) {
     try {
         const deletedShift = await prisma.shift.findUnique({
@@ -30,8 +49,7 @@ export async function removeShift(shiftId) {
     }
 }
 
-export async function addShift(shiftData) {
-    const { userId, startTime, endTime } = req.body;
+export async function addShift(userId, startTime, endTime) {
 
     const shift = await prisma.shift.create({
         data: {
