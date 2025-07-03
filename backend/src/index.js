@@ -17,7 +17,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use("/api/user", UserRoutes);
-app.use("/api/shifts/", ShiftRoutes);
+app.use("/api/shift", ShiftRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

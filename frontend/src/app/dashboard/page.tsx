@@ -1,11 +1,18 @@
 'use client';
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { format, subDays, addDays, startOfDay } from "date-fns";
 import DashboardDay from '@/components/DashboardDay'
 
 interface Week {
     start: Date;
     end: Date;
+}
+
+interface Shift {
+    id: number;
+    username: string;
+    startTime: string;
+    endTime: string;
 }
 
 function getWeek(today : Date) : Week {
@@ -16,10 +23,34 @@ function getWeek(today : Date) : Week {
     return { start: start, end: end };
 }
 
+function sortShiftsByDay(shifts : Shift[]): Shift[][] {
+    const sorted : Shift[][] = [[],[],[],[],[],[],[]]
+
+    shifts.forEach((shift) => {
+        const utcDate = new Date(shift.startTime);
+        const localDay = new Date(utcDate.toLocaleString("en-US", { timeZone: "America/Phoenix" })).getDay();
+        sorted[localDay].push(shift);
+    })
+    return sorted;
+}
 
 export default function Dashboard() {
     const [ currentDate, setDate ] = useState(startOfDay(new Date()));
     const { start, end } = getWeek(currentDate);
+    const [ shiftData, setShiftData ] = useState<Shift[]>([])
+    const [ sortedShifts, setSortedShifts ] = useState<Shift[][]>([[]])
+    const endOfLastDay = addDays(end, 1);
+    useEffect(() => {
+        fetch(`http://localhost:8080/api/shift/get?start=${start.toISOString()}&end=${endOfLastDay.toISOString()}`)
+            .then((res) => res.json())
+            .then((data) => {
+                setShiftData(data);
+                setSortedShifts(sortShiftsByDay(data));
+            })
+            .catch((error) => console.error("Error fetching shift data", error))
+    }, [start, end])
+
+
 
     const goPrevWeek = (): void => {
         setDate((prev) => subDays(prev, 7));
@@ -41,14 +72,13 @@ export default function Dashboard() {
                 </div>
             </div>
             <div className="flex flex-col p-8">
-                <DashboardDay day="Sunday" date={start} />
-                <DashboardDay day="Monday" date={addDays(start, 1)} />
-                <DashboardDay day="Tuesday" date={addDays(start, 2)} />
-                <DashboardDay day="Wednesday" date={addDays(start, 3)} />
-                <DashboardDay day="Thursday" date={addDays(start, 4)} />
-                <DashboardDay day="Friday" date={addDays(start, 5)} />
-                <DashboardDay day="Saturday" date={addDays(start, 6)} />
-                <p>{currentDate.toISOString()}</p>
+                <DashboardDay day="Sunday" date={start} shifts={sortedShifts[6]} />
+                <DashboardDay day="Monday" date={addDays(start, 1)} shifts={sortedShifts[0]}/>
+                <DashboardDay day="Tuesday" date={addDays(start, 2)} shifts={sortedShifts[1]}/>
+                <DashboardDay day="Wednesday" date={addDays(start, 3)} shifts={sortedShifts[2]}/>
+                <DashboardDay day="Thursday" date={addDays(start, 4)} shifts={sortedShifts[3]}/>
+                <DashboardDay day="Friday" date={addDays(start, 5)} shifts={sortedShifts[4]}/>
+                <DashboardDay day="Saturday" date={addDays(start, 6)} shifts={sortedShifts[5]}/>
             </div>
         </div>
     );

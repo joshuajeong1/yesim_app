@@ -3,9 +3,17 @@ interface ChildProps {
     date: Date;
     username: string;
     id: number;
+    shifts: Shift[]
 }
 
-export default function DashboardUser({ date, username, id }: ChildProps) {
+interface Shift {
+    id: number;
+    username: string;
+    startTime: string;
+    endTime: string;
+}
+
+export default function DashboardUser({ date, username, id, shifts }: ChildProps) {
     const [ startHours, setStartHours ] = useState("");
     const [ endHours, setEndHours ] = useState("");
     const [ startMinutes, setStartMinutes ] = useState("00");
@@ -13,8 +21,9 @@ export default function DashboardUser({ date, username, id }: ChildProps) {
     const [ startMeridian, setStartMeridian ] = useState<"AM" | "PM">("AM");
     const [ endMeridian, setEndMeridian ] = useState<"AM" | "PM">("AM");
 
-    const [ shiftStart, setShiftStart ] = useState<Date | null>(null);
-    const [ shiftEnd, setShiftEnd ] = useState<Date | null>(null);
+    const shift = shifts[0];
+
+    const formatTime = (timeStr : string) => new Date(timeStr).toLocaleTimeString([], { hour: "numeric", minute: "2-digit"});
 
     const calcTime = (hourStr : string, minuteStr: string, meridian: "AM" | "PM", date: Date): Date | null => {
         const hour = parseInt(hourStr, 10);
@@ -45,24 +54,68 @@ export default function DashboardUser({ date, username, id }: ChildProps) {
         return newDate;
     }
     
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const removeShift = async () => {
+        try {
+            const resp = fetch(`http://localhost:8080/api/shift/${shift.id}`, {
+                method: "DELETE"
+            });
+
+            alert("Shift deleted!");
+
+        }
+        catch (error) {
+            alert("Error deleting shift!");
+        }
+    }
+
+    const addShift = async () => {
         const startDate = calcTime(startHours, startMinutes, startMeridian, date);
         const endDate = calcTime(endHours, endMinutes, endMeridian, date)
-        
-        if(!startDate || !endDate) {
-            alert("Invalid input");
-            return;
+
+        if (!startDate || !endDate) {
+            alert("Invalid input!");
+            return null;
         }
-        
-        setShiftStart(startDate);
-        setShiftEnd(endDate);
-    };
+
+        const body = {
+            userId: id,
+            startTime: startDate!.toISOString(),
+            endTime: endDate!.toISOString(),
+        }
+
+        try {
+            const resp = fetch("http://localhost:8080/api/shift/new", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+            });
+
+            alert("Shift added!");
+            setStartHours("");
+            setStartMinutes("00");
+            setStartMeridian("AM");
+            setEndHours("");
+            setEndMinutes("00");
+            setEndMeridian("AM");
+        }
+        catch (error) {
+            console.error("Issue adding shift: " + error);
+            alert("Error when attempting to add shift.");
+        }
+    }
 
     return (
         <div className="grid [grid-template-columns:10%_22%_33%_33%] gap-x-3 justify-start">
             <span>{username}</span>
-            <p className="emerald-500">5:00 AM - 9:00 PM</p>
-            <button>+</button>
+            {shift ? (
+                <div className="text-emerald-500">{formatTime(shift.startTime)} - {formatTime(shift.endTime)}</div>
+            ) : (
+                <div className="text-sm text-gray-400">&nbsp;</div>
+            )}
+            
+            <button onClick={removeShift}>-</button>
             <div className="flex">
                 <input
                     type="text"
@@ -111,6 +164,7 @@ export default function DashboardUser({ date, username, id }: ChildProps) {
                     <option value="AM">AM</option>
                     <option value="PM">PM</option>
                 </select>
+                <button onClick={addShift}>+</button>
             </div>            
         </div>
     )

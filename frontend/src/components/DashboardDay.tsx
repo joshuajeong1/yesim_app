@@ -3,6 +3,14 @@ import DashboardUser from '@/components/DashboardUser'
 interface DashboardProps {
     day: string;
     date: Date;
+    shifts: Shift[]
+}
+
+interface Shift {
+    id: number;
+    username: string;
+    startTime: string;
+    endTime: string;
 }
 
 interface User {
@@ -10,7 +18,7 @@ interface User {
     username: string;
 }
 
-export default function DashboardDay({ day, date }: DashboardProps) {
+export default function DashboardDay({ day, date, shifts = []}: DashboardProps) {
     const [ users, setUsers ] = useState<User[]>([]);
 
     useEffect(() => {
@@ -28,9 +36,20 @@ export default function DashboardDay({ day, date }: DashboardProps) {
             <h1 className="text-lg text-gray-400">{date.getDate()}</h1>
             <h1 className="text-xl font-bold">{day}</h1>
             <div className="flex flex-col gap-y-3">
-                { users.map((user : User) => (
-                    <DashboardUser key={user.id} date={date} username={user.username} id={user.id} />
-                ))}
+                {users.map((user: User) => {
+                    const userShifts = shifts.filter(
+                        (shift) => shift.username === user.username
+                    );
+                    return (
+                        <DashboardUser
+                        key={user.id}
+                        date={date}
+                        username={user.username}
+                        id={user.id}
+                        shifts={userShifts}
+                        />
+                    )
+                    })}
             </div>
         </div>
     );

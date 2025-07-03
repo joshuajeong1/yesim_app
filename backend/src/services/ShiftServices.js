@@ -1,6 +1,19 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
+export async function getShiftByUserAndDay(date, userId) {
+    let endOfDay = new Date(date.getTime() + 24 * 60 * 60 * 1000)
+    return prisma.shift.findFirst({
+        where: {
+            userId: userId,
+            startTime: {
+                gte: date,
+                lte: endOfDay
+            },
+        }
+    })
+}
+
 export async function getAllShifts(startDate, endDate) {
     return prisma.shift.findMany({
         where: {

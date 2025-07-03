@@ -1,7 +1,22 @@
 import { PrismaClient } from '@prisma/client';
-import { addShift, removeShift, getAllShifts } from '../services/ShiftServices.js';
+import { addShift, removeShift, getAllShifts, getShiftByUserAndDay } from '../services/ShiftServices.js';
 const prisma = new PrismaClient();
 
+export const getShiftByUserDay = async (req, res) => {
+    const { date, id } = req.query;
+    const userId = parseInt(id, 10);
+    
+    if (isNaN(userId)) {
+        return res.status(400).json("Error with userId input");
+    }
+    else if (!date) {
+        return res.status(400).json("Date is missing");
+    }
+
+    let dateObj = new Date(date);
+    const shift = await getShiftByUserAndDay(dateObj, userId);
+    return res.json( {shift} )
+}
 
 export const createShift = async (req, res) => {
     const { userId, startTime, endTime } = req.body;
