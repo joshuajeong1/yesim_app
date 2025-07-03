@@ -71,14 +71,14 @@ export default function Dashboard() {
                     </button>
                 </div>
             </div>
-            <div className="flex flex-col p-8">
-                <DashboardDay day="Sunday" date={start} shifts={sortedShifts[6]} />
-                <DashboardDay day="Monday" date={addDays(start, 1)} shifts={sortedShifts[0]}/>
-                <DashboardDay day="Tuesday" date={addDays(start, 2)} shifts={sortedShifts[1]}/>
-                <DashboardDay day="Wednesday" date={addDays(start, 3)} shifts={sortedShifts[2]}/>
-                <DashboardDay day="Thursday" date={addDays(start, 4)} shifts={sortedShifts[3]}/>
-                <DashboardDay day="Friday" date={addDays(start, 5)} shifts={sortedShifts[4]}/>
-                <DashboardDay day="Saturday" date={addDays(start, 6)} shifts={sortedShifts[5]}/>
+            <div className="flex flex-col p-8 gap-y-2">
+                <DashboardDay day="Sun" date={start} shifts={sortedShifts[6]} />
+                <DashboardDay day="Mon" date={addDays(start, 1)} shifts={sortedShifts[0]}/>
+                <DashboardDay day="Tues" date={addDays(start, 2)} shifts={sortedShifts[1]}/>
+                <DashboardDay day="Wed" date={addDays(start, 3)} shifts={sortedShifts[2]}/>
+                <DashboardDay day="Thurs" date={addDays(start, 4)} shifts={sortedShifts[3]}/>
+                <DashboardDay day="Fri" date={addDays(start, 5)} shifts={sortedShifts[4]}/>
+                <DashboardDay day="Sat" date={addDays(start, 6)} shifts={sortedShifts[5]}/>
             </div>
         </div>
     );

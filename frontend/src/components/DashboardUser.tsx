@@ -107,16 +107,29 @@ export default function DashboardUser({ date, username, id, shifts }: ChildProps
     }
 
     return (
-        <div className="grid [grid-template-columns:10%_22%_33%_33%] gap-x-3 justify-start">
+        <div className="grid [grid-template-columns:10%_25%_65%] gap-x-3 justify-center">
             <span>{username}</span>
             {shift ? (
-                <div className="text-emerald-500">{formatTime(shift.startTime)} - {formatTime(shift.endTime)}</div>
+                <div className="grid [grid-template-columns:60%_40%] text-emerald-500">
+                    {formatTime(shift.startTime)} - {formatTime(shift.endTime)}
+                    <button onClick={() => {
+                        const confirmed = window.confirm("Are you sure you want to delete this shift?");
+                        if (confirmed) {
+                            removeShift(); // Call your delete function
+                        }
+                        }} 
+                        className="text-red-500 font-bold"
+                    >
+                            -
+                    </button>
+                </div>
+                
             ) : (
                 <div className="text-sm text-gray-400">&nbsp;</div>
             )}
             
-            <button onClick={removeShift}>-</button>
-            <div className="flex">
+            
+            <div className="flex justify-center">
                 <input
                     type="text"
                     placeholder="HH"

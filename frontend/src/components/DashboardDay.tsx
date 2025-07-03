@@ -32,7 +32,7 @@ export default function DashboardDay({ day, date, shifts = []}: DashboardProps) 
             })
     }, []);
     return (
-        <div className="w-full grid [grid-template-columns:5%_10%_85%] border p-5">
+        <div className="w-full grid [grid-template-columns:5%_10%_85%] border p-5 rounded-md">
             <h1 className="text-lg text-gray-400">{date.getDate()}</h1>
             <h1 className="text-xl font-bold">{day}</h1>
             <div className="flex flex-col gap-y-3">
