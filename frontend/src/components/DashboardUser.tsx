@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { FaPlus } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
+
 interface ChildProps {
     date: Date;
     username: string;
@@ -115,12 +118,12 @@ export default function DashboardUser({ date, username, id, shifts }: ChildProps
                     <button onClick={() => {
                         const confirmed = window.confirm("Are you sure you want to delete this shift?");
                         if (confirmed) {
-                            removeShift(); // Call your delete function
+                            removeShift();
                         }
                         }} 
-                        className="text-red-500 font-bold"
+                        className="text-white hover:text-red-400"
                     >
-                            -
+                            <FaTrash />
                     </button>
                 </div>
                 
@@ -128,57 +131,58 @@ export default function DashboardUser({ date, username, id, shifts }: ChildProps
                 <div className="text-sm text-gray-400">&nbsp;</div>
             )}
             
-            
-            <div className="flex justify-center">
-                <input
-                    type="text"
-                    placeholder="HH"
-                    value={startHours}
-                    onChange={(e) => setStartHours(e.target.value)}
-                    className="text-center w-12"
-                />
-                <p>:</p>
-                <input
-                    type="text"
-                    placeholder="MM"
-                    value={startMinutes}
-                    onChange={(e) => setStartMinutes(e.target.value)}
-                    className="text-center w-12"
-                />
-                <select
-                    value={startMeridian}
-                    onChange={(e) => setStartMeridian(e.target.value as "AM" | "PM")}
-                    className=""
-                >
-                    <option value="AM">AM</option>
-                    <option value="PM">PM</option>
-                </select>
-                <p className="font-bold px-8">TO</p>
-                <input
-                    type="text"
-                    placeholder="HH"
-                    value={endHours}
-                    onChange={(e) => setEndHours(e.target.value)}
-                    className="text-center w-12"
-                />
-                <p>:</p>
-                <input
-                    type="text"
-                    placeholder="MM"
-                    value={endMinutes}
-                    onChange={(e) => setEndMinutes(e.target.value)}
-                    className="text-center w-12"
-                />
-                <select
-                    value={endMeridian}
-                    onChange={(e) => setEndMeridian(e.target.value as "AM" | "PM")}
-                    className=""
-                >
-                    <option value="AM">AM</option>
-                    <option value="PM">PM</option>
-                </select>
-                <button onClick={addShift}>+</button>
-            </div>            
+            {!shift && (
+                <div className="flex justify-center">
+                    <input
+                        type="text"
+                        placeholder="HH"
+                        value={startHours}
+                        onChange={(e) => setStartHours(e.target.value)}
+                        className="text-center w-12"
+                    />
+                    <p>:</p>
+                    <input
+                        type="text"
+                        placeholder="MM"
+                        value={startMinutes}
+                        onChange={(e) => setStartMinutes(e.target.value)}
+                        className="text-center w-12"
+                    />
+                    <select
+                        value={startMeridian}
+                        onChange={(e) => setStartMeridian(e.target.value as "AM" | "PM")}
+                        className=""
+                    >
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                    </select>
+                    <p className="font-bold px-8">TO</p>
+                    <input
+                        type="text"
+                        placeholder="HH"
+                        value={endHours}
+                        onChange={(e) => setEndHours(e.target.value)}
+                        className="text-center w-12"
+                    />
+                    <p>:</p>
+                    <input
+                        type="text"
+                        placeholder="MM"
+                        value={endMinutes}
+                        onChange={(e) => setEndMinutes(e.target.value)}
+                        className="text-center w-12"
+                    />
+                    <select
+                        value={endMeridian}
+                        onChange={(e) => setEndMeridian(e.target.value as "AM" | "PM")}
+                        className=""
+                    >
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                    </select>
+                    <button onClick={addShift} className="pl-5 hover:text-green-400"><FaPlus /></button>
+                </div>  
+            )}          
         </div>
     )
 }
