@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { format, subDays, addDays, startOfDay } from "date-fns";
 import DashboardDay from '@/components/DashboardDay'
 
@@ -36,11 +36,12 @@ function sortShiftsByDay(shifts : Shift[]): Shift[][] {
 
 export default function Dashboard() {
     const [ currentDate, setDate ] = useState(startOfDay(new Date()));
-    const { start, end } = getWeek(currentDate);
+    const { start, end } = useMemo(() => getWeek(currentDate), [currentDate]);
     const [ shiftData, setShiftData ] = useState<Shift[]>([])
     const [ sortedShifts, setSortedShifts ] = useState<Shift[][]>([[]])
     const endOfLastDay = addDays(end, 1);
     useEffect(() => {
+        console.log("Fetching data")
         fetch(`http://localhost:8080/api/shift/get?start=${start.toISOString()}&end=${endOfLastDay.toISOString()}`)
             .then((res) => res.json())
             .then((data) => {
