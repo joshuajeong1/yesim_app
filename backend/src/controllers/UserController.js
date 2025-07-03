@@ -21,3 +21,20 @@ export const createUser = async (req, res) => {
     }
 };
 
+export const getUsers = async (req, res) => {
+    try {
+        const users = await prisma.user.findMany({
+            where: {
+                isAdmin: false,
+            },
+            select: {
+                id: true,
+                username: true,
+            },
+        });
+        res.json({ users: users})
+    }
+    catch (error) {
+        res.status(500).json({ error: "Internal server error" })
+    }
+}

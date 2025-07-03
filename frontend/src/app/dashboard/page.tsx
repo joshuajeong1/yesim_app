@@ -1,6 +1,7 @@
 'use client';
 import { useState } from "react"
-import { format, subDays, addDays } from "date-fns";
+import { format, subDays, addDays, startOfDay } from "date-fns";
+import DashboardDay from '@/components/DashboardDay'
 
 interface Week {
     start: Date;
@@ -16,8 +17,8 @@ function getWeek(today : Date) : Week {
 }
 
 
-export default function Schedule() {
-    const [ currentDate, setDate ] = useState(new Date());
+export default function Dashboard() {
+    const [ currentDate, setDate ] = useState(startOfDay(new Date()));
     const { start, end } = getWeek(currentDate);
 
     const goPrevWeek = (): void => {
@@ -27,7 +28,7 @@ export default function Schedule() {
         setDate((prev) => addDays(prev, 7));
     };
     return (
-        <div className="bg-slate-800 w-screen h-screen">
+        <div className="bg-slate-800 w-screen min-h-screen">
             <div className="flex flex-col items-center p-8">
                 <h2 className="font-bold text-3xl">
                     Week of {format(start, "MMM d")} to {format(end, "MMM d")}
@@ -38,6 +39,16 @@ export default function Schedule() {
                         Next Week
                     </button>
                 </div>
+            </div>
+            <div className="flex flex-col p-8">
+                <DashboardDay day="Sunday" date={start} />
+                <DashboardDay day="Monday" date={addDays(start, 1)} />
+                <DashboardDay day="Tuesday" date={addDays(start, 2)} />
+                <DashboardDay day="Wednesday" date={addDays(start, 3)} />
+                <DashboardDay day="Thursday" date={addDays(start, 4)} />
+                <DashboardDay day="Friday" date={addDays(start, 5)} />
+                <DashboardDay day="Saturday" date={addDays(start, 6)} />
+                <p>{currentDate.toISOString()}</p>
             </div>
         </div>
     );
