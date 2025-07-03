@@ -4,6 +4,7 @@ interface DashboardProps {
     day: string;
     date: Date;
     shifts: Shift[]
+    onRefresh: () => void;
 }
 
 interface Shift {
@@ -18,7 +19,7 @@ interface User {
     username: string;
 }
 
-export default function DashboardDay({ day, date, shifts = []}: DashboardProps) {
+export default function DashboardDay({ day, date, shifts = [], onRefresh}: DashboardProps) {
     const [ users, setUsers ] = useState<User[]>([]);
 
     useEffect(() => {
@@ -47,6 +48,7 @@ export default function DashboardDay({ day, date, shifts = []}: DashboardProps) 
                         username={user.username}
                         id={user.id}
                         shifts={userShifts}
+                        onRefresh={onRefresh}
                         />
                     )
                     })}

@@ -40,7 +40,8 @@ export default function Dashboard() {
     const [ shiftData, setShiftData ] = useState<Shift[]>([])
     const [ sortedShifts, setSortedShifts ] = useState<Shift[][]>([[]])
     const endOfLastDay = addDays(end, 1);
-    useEffect(() => {
+
+    const fetchShifts = () => {
         console.log("Fetching data")
         fetch(`http://localhost:8080/api/shift/get?start=${start.toISOString()}&end=${endOfLastDay.toISOString()}`)
             .then((res) => res.json())
@@ -49,6 +50,10 @@ export default function Dashboard() {
                 setSortedShifts(sortShiftsByDay(data));
             })
             .catch((error) => console.error("Error fetching shift data", error))
+    };
+
+    useEffect(() => {
+        fetchShifts();
     }, [start, end])
 
 
@@ -73,13 +78,13 @@ export default function Dashboard() {
                 </div>
             </div>
             <div className="flex flex-col p-8 gap-y-2">
-                <DashboardDay day="Sun" date={start} shifts={sortedShifts[6]} />
-                <DashboardDay day="Mon" date={addDays(start, 1)} shifts={sortedShifts[0]}/>
-                <DashboardDay day="Tues" date={addDays(start, 2)} shifts={sortedShifts[1]}/>
-                <DashboardDay day="Wed" date={addDays(start, 3)} shifts={sortedShifts[2]}/>
-                <DashboardDay day="Thurs" date={addDays(start, 4)} shifts={sortedShifts[3]}/>
-                <DashboardDay day="Fri" date={addDays(start, 5)} shifts={sortedShifts[4]}/>
-                <DashboardDay day="Sat" date={addDays(start, 6)} shifts={sortedShifts[5]}/>
+                <DashboardDay day="Sun" date={start} shifts={sortedShifts[6]} onRefresh={fetchShifts} />
+                <DashboardDay day="Mon" date={addDays(start, 1)} shifts={sortedShifts[0]} onRefresh={fetchShifts} />
+                <DashboardDay day="Tues" date={addDays(start, 2)} shifts={sortedShifts[1]} onRefresh={fetchShifts} />
+                <DashboardDay day="Wed" date={addDays(start, 3)} shifts={sortedShifts[2]} onRefresh={fetchShifts} />
+                <DashboardDay day="Thurs" date={addDays(start, 4)} shifts={sortedShifts[3]} onRefresh={fetchShifts} />
+                <DashboardDay day="Fri" date={addDays(start, 5)} shifts={sortedShifts[4]} onRefresh={fetchShifts} />
+                <DashboardDay day="Sat" date={addDays(start, 6)} shifts={sortedShifts[5]} onRefresh={fetchShifts} />
             </div>
         </div>
     );

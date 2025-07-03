@@ -6,7 +6,8 @@ interface ChildProps {
     date: Date;
     username: string;
     id: number;
-    shifts: Shift[]
+    shifts: Shift[];
+    onRefresh: () => void;
 }
 
 interface Shift {
@@ -16,7 +17,7 @@ interface Shift {
     endTime: string;
 }
 
-export default function DashboardUser({ date, username, id, shifts }: ChildProps) {
+export default function DashboardUser({ date, username, id, shifts, onRefresh }: ChildProps) {
     const [ startHours, setStartHours ] = useState("");
     const [ endHours, setEndHours ] = useState("");
     const [ startMinutes, setStartMinutes ] = useState("00");
@@ -59,12 +60,11 @@ export default function DashboardUser({ date, username, id, shifts }: ChildProps
     
     const removeShift = async () => {
         try {
-            const resp = fetch(`http://localhost:8080/api/shift/${shift.id}`, {
+            const resp = await fetch(`http://localhost:8080/api/shift/${shift.id}`, {
                 method: "DELETE"
             });
-
+            onRefresh();
             alert("Shift deleted!");
-
         }
         catch (error) {
             alert("Error deleting shift!");
@@ -87,7 +87,7 @@ export default function DashboardUser({ date, username, id, shifts }: ChildProps
         }
 
         try {
-            const resp = fetch("http://localhost:8080/api/shift/new", {
+            const resp = await fetch("http://localhost:8080/api/shift/new", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -95,6 +95,7 @@ export default function DashboardUser({ date, username, id, shifts }: ChildProps
                 body: JSON.stringify(body),
             });
 
+            onRefresh();
             alert("Shift added!");
             setStartHours("");
             setStartMinutes("00");
