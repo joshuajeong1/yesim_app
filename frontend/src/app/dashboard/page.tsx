@@ -17,7 +17,7 @@ interface Shift {
 
 function getWeek(today : Date) : Week {
     const day = today.getDay();
-    const daysSinceSat = (day + 1) % 7;
+    const daysSinceSat = day % 7;
     const start = subDays(today, daysSinceSat);
     const end = addDays(start, 6);
     return { start: start, end: end };
