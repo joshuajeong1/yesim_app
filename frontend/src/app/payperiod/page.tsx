@@ -1,17 +1,64 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import PayPeriodItem from '@/components/PayPeriod';
+
+interface PayPeriod {
+    id: number;
+    startDate: string;
+    endDate: string;
+    hoursWorked: HoursWorked[];
+}
+interface HoursWorked {
+    id: number;
+    userId: number;
+    payPeriodId: number;
+    totalHours: number;
+    user: User;
+}
+
+interface User {
+    username: string;
+    payRate: number;
+}
 
 
 export default function PayPeriod() {
-    const [ periods, setPeriods ] = useState([]);
+    const [ periods, setPeriods ] = useState<PayPeriod[]>([]);
+
+    const getPeriods = async () => {
+        await fetch("http://localhost:8080/api/period/get")
+            .then((res) => res.json())
+            .then((data) => {
+                setPeriods(data)
+            })
+            .catch((error) => {
+                console.error("Error getting users from backend: ", error)
+            })
+    }
+    const addAuto = async () => {
+        await fetch("http://localhost:8080/api/period/auto", {
+            method: "POST",
+        })
+        getPeriods();
+    }
+
+    useEffect(() => {
+        getPeriods();
+    }, [])
+
 
     return (
-        <div className="bg-slate-900 w-screen min-h-screen">
+        <div className="bg-slate-800 w-screen min-h-screen">
             <div className="p-8">
                 <h1 className="text-2xl font-bold text-center">Pay Periods</h1>
-                <div className="">
-                    
+                <div className="flex flex-col items-center pt-8 gap-y-4">
+                    {periods.map((period : PayPeriod) => {
+                        return (
+                            <PayPeriodItem key={period.id} startDate={new Date(period.startDate)} endDate={new Date(period.endDate)} hoursWorked={period.hoursWorked} />
+                        )
+                    })}
+                    <button onClick={addAuto} className="border rounded-md p-4">New Pay Period</button>
                 </div>
             </div>
         </div>

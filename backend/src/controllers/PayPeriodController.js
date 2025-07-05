@@ -2,6 +2,32 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 import { addDays, addWeeks, setHours, setMinutes, setSeconds, setMilliseconds } from "date-fns";
 
+export const getPayPeriods = async (req, res) => {
+    try {
+        const periods = await prisma.payPeriod.findMany({
+            include: {
+                hoursWorked: {
+                    include: {
+                        user: {
+                            select: {
+                                username: true,
+                                payRate: true
+                            }
+                        }
+                    }
+                    
+                }
+            },
+        });
+        const sortedPeriods = periods.map(period => ({...period, hoursWorked: period.hoursWorked.slice().sort((a, b) => a.userId - b.userId)}));
+        res.status(201).json(sortedPeriods);
+    }
+    catch (error) {
+        console.error("Error fetching pay periods: ", error);
+        res.status(500).json({ error: "Internal server error"});
+    }
+}
+
 export const createPayPeriod = async (req, res) => {
     const { startDate, endDate } = req.body;
     try {
@@ -57,3 +83,4 @@ export const autoCreatePeriod = async (req, res) => {
         res.status(500).json( {error: "Internal server error " + error })
     }
 }
+

@@ -23,6 +23,14 @@ async function main() {
     },
   });
   console.log('Admin user created');
+  
+  await prisma.payPeriod.create({
+    data: {
+      startDate: '2025-06-15T07:00:00.000Z',
+      endDate: '2025-06-29T06:59:00.000Z'
+    }
+  });
+  console.log("Default pay period created");
 }
 
 main()
