@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
-import { addDays, addWeeks, setHours, setMinutes, setSeconds, setMilliseconds } from "date-fns";
+import { addDays, lastDayOfMonth, setHours, setMinutes, setSeconds, setMilliseconds } from "date-fns";
 
 export const getPayPeriods = async (req, res) => {
     try {
@@ -66,10 +66,21 @@ export const autoCreatePeriod = async (req, res) => {
 
         const startDateUTC = setHours(setMinutes(setSeconds(setMilliseconds(nextDayUTC, 0), 0), 0), 0);
         
+        let endDateUTC;
+        if (startDateUTC.getMonth() === 1 && startDateUTC.getDate() == 16) {
+            const lastDay = lastDayOfMonth(startDateUTC);
+            endDateUTC = setHours(setMinutes(setSeconds(setMilliseconds(lastDay, 0), 0), 59), 23);
+        }
+        else {
+            let periodLength = 14;
+            const thirtyOneMonths = [0, 2, 4, 6, 7, 9, 11];
+            if(thirtyOneMonths.includes(startDateUTC.getMonth()) && startDateUTC.getDate() == 16) {
+                periodLength += 1;
+            }
+            var fifteenDaysLater = addDays(startDateUTC, periodLength);
+            endDateUTC = setHours(setMinutes(setSeconds(setMilliseconds(fifteenDaysLater, 0), 0), 59), 23);
+        }
 
-        const twoWeeksLater = addDays(startDateUTC, 13);
-        const endDateUTC = setHours(setMinutes(setSeconds(setMilliseconds(twoWeeksLater, 0), 0), 59), 23);
-        
         const newPeriod = await prisma.payPeriod.create({
             data: {
                 startDate: startDateUTC,
