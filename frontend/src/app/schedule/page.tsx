@@ -13,6 +13,10 @@ interface Shift {
     startTime: string;
     endTime: string;
 }
+interface User {
+    id: number;
+    username: string;
+}
 
 
 function getWeek(today : Date) : Week {
@@ -40,19 +44,42 @@ export default function Schedule() {
     const [ sortedShifts, setSortedShifts ] = useState<Shift[][]>([[]])
     const endOfLastDay = addDays(end, 1);
 
-    const fetchShifts = async () => {
+    const defaultUser: User = {
+        id: -1,
+        username: "All Users",
+    }
+
+    const [ users, setUsers ] = useState<User[]>([]);
+    const [ selectedUser, setSelectedUser ] = useState<User>(defaultUser);
+
+    useEffect(() => {
+        fetch("http://localhost:8080/api/user/get")
+            .then((res) => res.json())
+            .then((data) => {
+                const allUsers = [defaultUser, ...data.users];
+                setUsers(allUsers);
+            })
+            .catch((error) => {
+                console.error("Error getting users from backend: ", error)
+            })
+    }, []);
+
+    const fetchShifts = () => {
             console.log("Fetching data")
-            await fetch(`http://localhost:8080/api/shift/get?start=${start.toISOString()}&end=${endOfLastDay.toISOString()}`)
+            fetch(`http://localhost:8080/api/shift/get?start=${start.toISOString()}&end=${endOfLastDay.toISOString()}`)
                 .then((res) => res.json())
                 .then((data) => {
-                    setSortedShifts(sortShiftsByDay(data));
+                    const userShifts =
+                        selectedUser.id !== defaultUser.id ? 
+                        data.filter((shift: Shift) => shift.username === selectedUser.username) : data;
+                    setSortedShifts(sortShiftsByDay(userShifts));
                 })
                 .catch((error) => console.error("Error fetching shift data", error))
     };
     
     useEffect(() => {
         fetchShifts();
-    }, [start, end])
+    }, [start, end, selectedUser.id])
 
     const goPrevWeek = (): void => {
         setDate((prev) => subDays(prev, 7));
@@ -62,6 +89,24 @@ export default function Schedule() {
     };
     return (
         <div className="bg-slate-800 w-screen h-screen">
+            <div className="absolute right-16 top-8">
+                <select
+                    value={selectedUser.id}
+                    onChange={(e) => {
+                        const id = parseInt(e.target.value, 10);
+                        const user = users.find((u) => u.id === id);
+                        if (user) {
+                            setSelectedUser(user);
+                        }
+                    }}
+                >
+                    {users.map((user : User) => {
+                        return (
+                            <option key={user.id} value={user.id}>{user.username}</option>
+                        )
+                    })}
+                </select>
+            </div>
             <div className="flex flex-col items-center p-8">
                 <h2 className="font-bold text-3xl">
                     Week of {format(start, "MMM d")} to {format(end, "MMM d")}
