@@ -74,7 +74,8 @@ export const getShifts = async (req, res) => {
         const endDate = new Date(end);
 
         const shifts = await getAllShifts(startDate, endDate);
-
+        shifts.sort((a, b) => a.userId - b.userId)
+        
         const data = shifts.map(shift => ({
             id: shift.id,
             username: shift.user.username,
