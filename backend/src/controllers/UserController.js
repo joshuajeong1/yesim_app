@@ -31,6 +31,9 @@ export const getUsers = async (req, res) => {
                 id: true,
                 username: true,
             },
+            orderBy: {
+                id: 'asc'
+            }
         });
         res.json({ users: users})
     }
