@@ -79,7 +79,10 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
             alert("Invalid input!");
             return null;
         }
-
+        if(endDate <= startDate) {
+            alert("Invalid input!");
+            return null;
+        }
         const body = {
             userId: id,
             startTime: startDate!.toISOString(),

@@ -24,6 +24,16 @@ export const createShift = async (req, res) => {
     if (!userId || !startTime || !endTime ) {
         return res.status(400).json({ error: "Missing required fields" })
     }
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+
+    if (isNaN(start) || isNaN(end)) {
+        return res.status(400).json({ error: "Invalid date format" });
+    }
+
+    if (end <= start) {
+        return res.status(400).json({ error: "End time must be after start time" });
+    }
     try {
         const newShift = await addShift(userId, startTime, endTime);
         res.status(201).json(newShift);
