@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import UserRoutes from './routes/UserRoutes.js'
 import ShiftRoutes from './routes/ShiftRoutes.js'
 import PayPeriodRoutes from './routes/PayPeriodRoutes.js'
+import authRoutes from './routes/AuthRoutes.js'
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ app.get('/api/health', (req, res) => {
 app.use("/api/user", UserRoutes);
 app.use("/api/shift", ShiftRoutes);
 app.use("/api/period", PayPeriodRoutes);
-
+app.use("/api/auth/", authRoutes);
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
