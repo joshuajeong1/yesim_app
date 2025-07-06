@@ -2,7 +2,9 @@ import express from 'express'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { PrismaClient } from '@prisma/client'
-require("dotenv").config();
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -32,3 +34,19 @@ router.post("/login", async (req, res) => {
 
     res.json({ token })
 });
+
+router.post("/verify", async (req, res) => {
+    const { token } = req.body;
+    if(!token) {
+        return res.status(401).json({error: "Missing JWT token"});
+    }
+    try {
+        const payload = jwt.verify(token, JWT_SECRET);
+        res.json({ valid: true, isAdmin: payload.isAdmin })
+    }
+    catch (error) {
+        return res.status(401).json({valid: false })
+    }
+
+});
+export default router;

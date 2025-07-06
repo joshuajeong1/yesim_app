@@ -64,8 +64,10 @@ export default function Dashboard() {
     };
     return (
         <div className="bg-slate-800 w-screen min-h-screen">
-            <div className="absolute top-8 left-8">
+            <div className="absolute top-8 left-8 flex gap-x-4">
                 <a href="/payperiod" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Pay Periods</a>
+                <a href="/schedule" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Schedule</a>
+
             </div>
             <div className="flex flex-col items-center p-8">
                 <h2 className="font-bold text-3xl">
