@@ -4,6 +4,7 @@ interface DashboardProps {
     day: string;
     date: Date;
     shifts: Shift[]
+    users: User[]
     onRefresh: () => void;
 }
 
@@ -19,19 +20,8 @@ interface User {
     username: string;
 }
 
-export default function DashboardDay({ day, date, shifts = [], onRefresh}: DashboardProps) {
-    const [ users, setUsers ] = useState<User[]>([]);
-
-    useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/get`)
-            .then((res) => res.json())
-            .then((data) => {
-                setUsers(data.users)
-            })
-            .catch((error) => {
-                console.error("Error getting users from backend: ", error)
-            })
-    }, []);
+export default function DashboardDay({ day, date, shifts = [], users = [], onRefresh}: DashboardProps) {
+    
     return (
         <div className="w-full grid [grid-template-columns:5%_10%_85%] border p-5 rounded-md">
             <h1 className="text-lg text-gray-400">{date.getDate()}</h1>

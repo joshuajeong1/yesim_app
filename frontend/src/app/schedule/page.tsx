@@ -42,7 +42,7 @@ export default function Schedule() {
     const [ currentDate, setDate ] = useState(startOfDay(new Date()));
     const { start, end } = useMemo(() => getWeek(currentDate), [currentDate]);
     const [ sortedShifts, setSortedShifts ] = useState<Shift[][]>([[]])
-    const endOfLastDay = addDays(end, 1);
+    const endOfLastDay = useMemo(() => addDays(end, 1), [end]);
 
     const defaultUser: User = useMemo(() => ({
         id: -1,
@@ -75,7 +75,7 @@ export default function Schedule() {
                     setSortedShifts(sortShiftsByDay(userShifts));
                 })
                 .catch((error) => console.error("Error fetching shift data", error))
-    }, [start, endOfLastDay, selectedUser, defaultUser]);
+    }, [start, endOfLastDay, selectedUser.id, defaultUser.id]);
     
     useEffect(() => {
         fetchShifts();

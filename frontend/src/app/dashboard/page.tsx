@@ -23,6 +23,11 @@ function getWeek(today : Date) : Week {
     return { start: start, end: end };
 }
 
+interface User {
+    id: number;
+    username: string;
+}
+
 function sortShiftsByDay(shifts : Shift[]): Shift[][] {
     const sorted : Shift[][] = [[],[],[],[],[],[],[]]
 
@@ -38,8 +43,21 @@ export default function Dashboard() {
     const [ currentDate, setDate ] = useState(startOfDay(new Date()));
     const { start, end } = useMemo(() => getWeek(currentDate), [currentDate]);
     const [ sortedShifts, setSortedShifts ] = useState<Shift[][]>([[]])
-    const endOfLastDay = addDays(end, 1);
+    const endOfLastDay = useMemo(() => addDays(end, 1), [end]);
 
+    const [ users, setUsers ] = useState<User[]>([]);
+
+    useEffect(() => {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/get`)
+            .then((res) => res.json())
+            .then((data) => {
+                setUsers(data.users)
+            })
+            .catch((error) => {
+                console.error("Error getting users from backend: ", error)
+            })
+    }, []);
+    
     const fetchShifts = useCallback(() => {
         console.log("Fetching data")
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/get?start=${start.toISOString()}&end=${endOfLastDay.toISOString()}`)
@@ -81,13 +99,13 @@ export default function Dashboard() {
                 </div>
             </div>
             <div className="flex flex-col p-8 gap-y-2">
-                <DashboardDay day="Sun" date={start} shifts={sortedShifts[0]} onRefresh={fetchShifts} />
-                <DashboardDay day="Mon" date={addDays(start, 1)} shifts={sortedShifts[1]} onRefresh={fetchShifts} />
-                <DashboardDay day="Tues" date={addDays(start, 2)} shifts={sortedShifts[2]} onRefresh={fetchShifts} />
-                <DashboardDay day="Wed" date={addDays(start, 3)} shifts={sortedShifts[3]} onRefresh={fetchShifts} />
-                <DashboardDay day="Thurs" date={addDays(start, 4)} shifts={sortedShifts[4]} onRefresh={fetchShifts} />
-                <DashboardDay day="Fri" date={addDays(start, 5)} shifts={sortedShifts[5]} onRefresh={fetchShifts} />
-                <DashboardDay day="Sat" date={addDays(start, 6)} shifts={sortedShifts[6]} onRefresh={fetchShifts} />
+                <DashboardDay day="Sun" date={start} shifts={sortedShifts[0]} users={users} onRefresh={fetchShifts} />
+                <DashboardDay day="Mon" date={addDays(start, 1)} shifts={sortedShifts[1]} users={users} onRefresh={fetchShifts} />
+                <DashboardDay day="Tues" date={addDays(start, 2)} shifts={sortedShifts[2]} users={users} onRefresh={fetchShifts} />
+                <DashboardDay day="Wed" date={addDays(start, 3)} shifts={sortedShifts[3]} users={users} onRefresh={fetchShifts} />
+                <DashboardDay day="Thurs" date={addDays(start, 4)} shifts={sortedShifts[4]} users={users} onRefresh={fetchShifts} />
+                <DashboardDay day="Fri" date={addDays(start, 5)} shifts={sortedShifts[5]} users={users} onRefresh={fetchShifts} />
+                <DashboardDay day="Sat" date={addDays(start, 6)} shifts={sortedShifts[6]} users={users} onRefresh={fetchShifts} />
             </div>
         </div>
     );
