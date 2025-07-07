@@ -88,27 +88,9 @@ export default function Schedule() {
         setDate((prev) => addDays(prev, 7));
     };
     return (
-        <div className="bg-slate-800 w-screen h-screen">
-            <div className="absolute right-16 top-8">
-                <select
-                    value={selectedUser.id}
-                    onChange={(e) => {
-                        const id = parseInt(e.target.value, 10);
-                        const user = users.find((u) => u.id === id);
-                        if (user) {
-                            setSelectedUser(user);
-                        }
-                    }}
-                >
-                    {users.map((user : User) => {
-                        return (
-                            <option key={user.id} value={user.id}>{user.username}</option>
-                        )
-                    })}
-                </select>
-            </div>
+        <div className="bg-slate-800 w-screen min-h-screen">
             <div className="flex flex-col items-center p-8">
-                <h2 className="font-bold text-3xl">
+                <h2 className="font-bold text-xl md:text-3xl">
                     Week of {format(start, "MMM d")} to {format(end, "MMM d")}
                 </h2>
                 <div className="p-4 flex gap-5">
@@ -117,8 +99,26 @@ export default function Schedule() {
                         Next Week
                     </button>
                 </div>
+                <div className="md:absolute md:right-16 md:top-8">
+                    <select
+                        value={selectedUser.id}
+                        onChange={(e) => {
+                            const id = parseInt(e.target.value, 10);
+                            const user = users.find((u) => u.id === id);
+                            if (user) {
+                                setSelectedUser(user);
+                            }
+                        }}
+                    >
+                        {users.map((user : User) => {
+                            return (
+                                <option key={user.id} value={user.id}>{user.username}</option>
+                            )
+                        })}
+                    </select>
+                </div>
             </div>
-            <div className="grid grid-cols-7 pt-4 px-2">
+            <div className="grid grid-rows-7 md:grid-cols-7 px-2">
                 <ScheduleDay day="Sun" date={start} shifts={sortedShifts[0]} />
                 <ScheduleDay day="Mon" date={addDays(start, 1)} shifts={sortedShifts[1]} />
                 <ScheduleDay day="Tues" date={addDays(start, 2)} shifts={sortedShifts[2]} />
