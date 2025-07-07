@@ -75,7 +75,7 @@ export default function Schedule() {
                     setSortedShifts(sortShiftsByDay(userShifts));
                 })
                 .catch((error) => console.error("Error fetching shift data", error))
-    }, [start, endOfLastDay, selectedUser.id, defaultUser.id]);
+    }, [start, endOfLastDay, selectedUser.id, defaultUser.id, selectedUser.username]);
     
     useEffect(() => {
         fetchShifts();

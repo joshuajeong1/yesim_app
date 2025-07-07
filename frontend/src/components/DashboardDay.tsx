@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import DashboardUser from '@/components/DashboardUser'
 interface DashboardProps {
     day: string;
