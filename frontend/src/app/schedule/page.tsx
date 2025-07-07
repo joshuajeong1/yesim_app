@@ -44,10 +44,10 @@ export default function Schedule() {
     const [ sortedShifts, setSortedShifts ] = useState<Shift[][]>([[]])
     const endOfLastDay = addDays(end, 1);
 
-    const defaultUser: User = {
+    const defaultUser: User = useMemo(() => ({
         id: -1,
         username: "All Users",
-    }
+    }), []);
 
     const [ users, setUsers ] = useState<User[]>([]);
     const [ selectedUser, setSelectedUser ] = useState<User>(defaultUser);

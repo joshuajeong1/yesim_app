@@ -30,8 +30,13 @@ export default function Login() {
             await login(username, password);
             router.push("/dashboard")
         }
-        catch (error : any) {
-            setErrorMessage(error.message);
+        catch (error : unknown) {
+            if (error instanceof Error) {
+                setErrorMessage(error.message);
+            }
+            else {
+                setErrorMessage("An unknown error has occurred.")
+            }
         }
     };
 
