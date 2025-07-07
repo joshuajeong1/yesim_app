@@ -23,7 +23,7 @@ export default function DashboardDay({ day, date, shifts = [], onRefresh}: Dashb
     const [ users, setUsers ] = useState<User[]>([]);
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/user/get")
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/get`)
             .then((res) => res.json())
             .then((data) => {
                 setUsers(data.users)

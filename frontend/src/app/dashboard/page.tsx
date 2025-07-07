@@ -42,7 +42,7 @@ export default function Dashboard() {
 
     const fetchShifts = () => {
         console.log("Fetching data")
-        fetch(`http://localhost:8080/api/shift/get?start=${start.toISOString()}&end=${endOfLastDay.toISOString()}`)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/get?start=${start.toISOString()}&end=${endOfLastDay.toISOString()}`)
             .then((res) => res.json())
             .then((data) => {
                 setSortedShifts(sortShiftsByDay(data));
@@ -51,6 +51,7 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
+
         fetchShifts();
     }, [start, end])
 

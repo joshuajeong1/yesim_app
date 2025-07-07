@@ -17,7 +17,7 @@ export default function Users() {
 
     const handleNewUser = async () => {
         try {
-            const resp = await fetch("http://localhost:8080/api/user/new", {
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/new`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -38,7 +38,7 @@ export default function Users() {
     }
 
     const getUsers = async () => {
-        fetch("http://localhost:8080/api/user/getall")
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/getall`)
             .then((res) => res.json())
             .then((data) => {
                 setUsers(data.users);

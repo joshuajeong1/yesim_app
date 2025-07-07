@@ -19,7 +19,7 @@ export default function User({username, id, payRate, onRefresh}:ChildProps) {
     const handleEdit = async () => {
         const newRate = parseFloat(payRateInput);
         try {
-            const resp = await fetch("http://localhost:8080/api/user/update", {
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/update`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userId: id, newPay: newRate }),
@@ -37,7 +37,7 @@ export default function User({username, id, payRate, onRefresh}:ChildProps) {
 
     const handleDelete = async () => {
         try {
-            const resp = await fetch(`http://localhost:8080/api/user/${id}`, {
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/${id}`, {
                 method: "DELETE"
             });
             onRefresh();

@@ -60,7 +60,7 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
     
     const removeShift = async () => {
         try {
-            const resp = await fetch(`http://localhost:8080/api/shift/${shift.id}`, {
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/${shift.id}`, {
                 method: "DELETE"
             });
             onRefresh();
@@ -90,7 +90,7 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
         }
 
         try {
-            const resp = await fetch("http://localhost:8080/api/shift/new", {
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/new`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
