@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
     const url = req.nextUrl.clone();
-    if(url.pathname.startsWith("/dashboard") || url.pathname.startsWith("/payperiod")) {
+    if(url.pathname.startsWith("/dashboard") || url.pathname.startsWith("/payperiod") || url.pathname.startsWith("/users")) {
         const token = req.cookies.get("token")?.value;
 
         if(!token) {

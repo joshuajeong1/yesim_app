@@ -67,15 +67,15 @@ export default function Dashboard() {
             <div className="absolute top-8 left-8 flex gap-x-4">
                 <a href="/payperiod" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Pay Periods</a>
                 <a href="/schedule" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Schedule</a>
-
+                <a href="/users" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Users</a>
             </div>
             <div className="flex flex-col items-center p-8">
                 <h2 className="font-bold text-3xl">
                     Week of {format(start, "MMM d")} to {format(end, "MMM d")}
                 </h2>
                 <div className="p-4 flex gap-5">
-                    <button className="bg-gray-700 p-2 rounded-md" onClick={goPrevWeek}>Previous Week</button>
-                    <button className="bg-gray-700 p-2 rounded-md" onClick={goNextWeek} style={{ marginLeft: "1rem" }}>
+                    <button className="bg-gray-700 p-3 rounded-md hover:bg-gray-900" onClick={goPrevWeek}>Previous Week</button>
+                    <button className="bg-gray-700 p-3 rounded-md hover:bg-gray-900" onClick={goNextWeek} style={{ marginLeft: "1rem" }}>
                         Next Week
                     </button>
                 </div>
