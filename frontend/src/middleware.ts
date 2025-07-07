@@ -13,7 +13,7 @@ export async function middleware(req: NextRequest) {
         }
 
         try {
-            const resp = await fetch("http://localhost:8080/api/auth/verify", {
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/verify`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
