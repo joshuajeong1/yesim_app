@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo, useEffect } from "react"
+import { useState, useMemo, useEffect, useCallback } from "react"
 import { format, subDays, addDays, startOfDay } from "date-fns";
 import ScheduleDay from '@/components/ScheduleDay'
 
@@ -62,9 +62,9 @@ export default function Schedule() {
             .catch((error) => {
                 console.error("Error getting users from backend: ", error)
             })
-    }, []);
+    }, [defaultUser]);
 
-    const fetchShifts = () => {
+    const fetchShifts = useCallback(() => {
             console.log("Fetching data")
             fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/get?start=${start.toISOString()}&end=${endOfLastDay.toISOString()}`)
                 .then((res) => res.json())
@@ -75,11 +75,11 @@ export default function Schedule() {
                     setSortedShifts(sortShiftsByDay(userShifts));
                 })
                 .catch((error) => console.error("Error fetching shift data", error))
-    };
+    }, [start, endOfLastDay, selectedUser, defaultUser]);
     
     useEffect(() => {
         fetchShifts();
-    }, [start, end, selectedUser.id])
+    }, [start, end, selectedUser.id, fetchShifts])
 
     const goPrevWeek = (): void => {
         setDate((prev) => subDays(prev, 7));

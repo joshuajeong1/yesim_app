@@ -60,14 +60,14 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
     
     const removeShift = async () => {
         try {
-            const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/${shift.id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/${shift.id}`, {
                 method: "DELETE"
             });
             onRefresh();
             alert("Shift deleted!");
         }
         catch (error) {
-            alert("Error deleting shift!");
+            alert("Error deleting shift: " + error);
         }
     }
 
@@ -90,7 +90,7 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
         }
 
         try {
-            const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/new`, {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/new`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

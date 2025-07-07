@@ -37,14 +37,14 @@ export default function User({username, id, payRate, onRefresh}:ChildProps) {
 
     const handleDelete = async () => {
         try {
-            const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/${id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/${id}`, {
                 method: "DELETE"
             });
             onRefresh();
             alert("User deleted!");
         }
         catch (error) {
-            alert("Error deleting user!");
+            alert("Error deleting user: " + error);
         }
     }
 
