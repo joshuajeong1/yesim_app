@@ -88,7 +88,7 @@ export default function Schedule() {
         setDate((prev) => addDays(prev, 7));
     };
     return (
-        <div className="bg-slate-800 w-screen min-h-screen">
+        <div className="bg-slate-800 w-screen min-h-screen text-white">
             <div className="flex flex-col items-center p-8">
                 <h2 className="font-bold text-xl md:text-3xl">
                     Week of {format(start, "MMM d")} to {format(end, "MMM d")}

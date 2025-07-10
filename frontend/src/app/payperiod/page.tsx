@@ -49,7 +49,7 @@ export default function PayPeriod() {
 
 
     return (
-        <div className="bg-slate-800 w-screen min-h-screen">
+        <div className="bg-slate-800 w-screen min-h-screen text-white">
             <div className="p-8">
                 <h1 className="text-2xl font-bold text-center">Pay Periods</h1>
                 <div className="flex flex-col items-center py-8 gap-y-4">

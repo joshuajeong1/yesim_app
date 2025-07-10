@@ -37,7 +37,7 @@ export default function MonthlyView() {
     };
 
     return (
-        <div className="p-4 bg-slate-800 min-h-screen">
+        <div className="p-4 bg-slate-800 min-h-screen text-white">
             <h1 className="text-3xl font-bold mb-4 text-center">Calendar</h1>
             <div className="flex justify-center m-4 gap-x-5">
                 <button className="bg-gray-700 p-3 rounded-md hover:bg-gray-900" onClick={goPrevMonth}>Previous Month</button>
