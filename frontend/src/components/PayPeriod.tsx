@@ -32,10 +32,13 @@ export default function PayPeriodItem( {startDate, endDate, hoursWorked}: ChildP
                 <button onClick={() => setIsOpen((prev) => !prev)} className="border p-4 rounded-md">View Data</button>
             </div>
             {isOpen && (
-                <ul className="">
+                <ul className="w-[30%] space-y-2">
                     {hoursWorked.map((hoursRecord : HoursWorked) => {
                         return (
-                            <li key={hoursRecord.id}>{hoursRecord.user.username} - {hoursRecord.totalHours} hours (${hoursRecord.user.payRate * hoursRecord.totalHours})</li>
+                            <li key={hoursRecord.id} className="flex justify-between border-b pb-1">
+                                <span>{hoursRecord.user.username}</span>
+                                <span>{hoursRecord.totalHours.toFixed(2)} hours (${hoursRecord.user.payRate * hoursRecord.totalHours})</span>
+                            </li>
                         )
                     })}
                 </ul>
