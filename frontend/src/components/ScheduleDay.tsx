@@ -19,7 +19,7 @@ export default function ScheduleDay({day, date, shifts = []} : ScheduleProps) {
                 <h1 className="text-lg text-gray-400">{date.getDate()}</h1>
                 <h1 className="text-xl font-bold">{day}</h1>
             </div>
-            <div className="border h-full flex flex-col gap-y-8">
+            <div className="border h-full flex flex-col gap-y-4">
                 {shifts.map((shift: Shift) => {
                     return (
                         <div key={shift.id} className="text-sm text-center my-4 flex flex-col">

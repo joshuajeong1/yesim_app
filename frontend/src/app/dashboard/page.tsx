@@ -86,6 +86,8 @@ export default function Dashboard() {
                 <a href="/payperiod" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Pay Periods</a>
                 <a href="/schedule" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Schedule</a>
                 <a href="/users" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Users</a>
+                <a href="/monthly" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Calendar View</a>
+
             </div>
             <div className="flex flex-col items-center p-8">
                 <h2 className="font-bold text-3xl">

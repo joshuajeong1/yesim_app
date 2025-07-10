@@ -99,7 +99,7 @@ export default function Schedule() {
                         Next Week
                     </button>
                 </div>
-                <div className="md:absolute md:right-16 md:top-8">
+                <div className="md:absolute md:right-16 md:top-8 flex flex-col gap-y-3">
                     <select
                         value={selectedUser.id}
                         onChange={(e) => {
@@ -116,6 +116,7 @@ export default function Schedule() {
                             )
                         })}
                     </select>
+                    <a href="/monthly" className="self-center">Calendar View</a>
                 </div>
             </div>
             <div className="grid grid-rows-7 md:grid-cols-7 px-2">
