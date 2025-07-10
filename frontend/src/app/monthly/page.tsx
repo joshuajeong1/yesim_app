@@ -12,7 +12,7 @@ interface Shift {
 }
 
 export default function MonthlyView() {
-    const [shifts, setShifts] = useState<any[]>([]);
+    const [shifts, setShifts] = useState<Shift[]>([]);
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
     useEffect(() => {
