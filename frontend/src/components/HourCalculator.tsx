@@ -31,7 +31,7 @@ export default function HourCalculator() {
         setHoursWorked({});
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/get?start=${start.toISOString()}&end=${end.toISOString()}`);
-
+            
             if (!response.ok) throw new Error("Failed to fetch shifts");
 
             const data: Shift[] = await response.json();
@@ -45,7 +45,7 @@ export default function HourCalculator() {
 
                 totals[shift.username] = (totals[shift.username] || 0) + hours;
             }
-
+            
             setHoursWorked(totals);
         } 
         catch (error) {
@@ -80,7 +80,7 @@ export default function HourCalculator() {
             <button
             onClick={fetchShifts}
             disabled={!startDate || !endDate}
-            className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+            className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:bg-blue-700"
         >
             Calculate Hours
         </button>

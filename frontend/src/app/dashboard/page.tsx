@@ -81,14 +81,7 @@ export default function Dashboard() {
         setDate((prev) => addDays(prev, 7));
     };
     return (
-        <div className="bg-slate-800 w-screen min-h-screen text-white">
-            <div className="absolute top-8 left-8 flex gap-x-4">
-                <a href="/payperiod" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Pay Periods</a>
-                <a href="/schedule" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Schedule</a>
-                <a href="/users" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Users</a>
-                <a href="/monthly" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Calendar View</a>
-
-            </div>
+        <div className="bg-slate-800 w-screen min-h-screen text-white flex flex-col">
             <div className="flex flex-col items-center p-8">
                 <h2 className="font-bold text-3xl">
                     Week of {format(start, "MMM d")} to {format(end, "MMM d")}
@@ -99,6 +92,12 @@ export default function Dashboard() {
                         Next Week
                     </button>
                 </div>
+            </div>
+            <div className="2xl:absolute self-center 2xl:top-8 2xl:left-8 flex gap-x-4">
+                <a href="/payperiod" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Pay Periods</a>
+                <a href="/schedule" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Schedule</a>
+                <a href="/users" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Users</a>
+                <a href="/monthly" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Calendar View</a>
             </div>
             <div className="flex flex-col p-8 gap-y-2">
                 <DashboardDay day="Sun" date={start} shifts={sortedShifts[0]} users={users} onRefresh={fetchShifts} />

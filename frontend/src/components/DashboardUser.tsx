@@ -117,7 +117,7 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
         <div className="grid [grid-template-columns:10%_25%_65%] gap-x-3 justify-center">
             <span>{username}</span>
             {shift ? (
-                <div className="grid [grid-template-columns:60%_40%] text-emerald-500">
+                <div className="grid [grid-template-columns:70%_30%] text-emerald-500">
                     {formatTime(shift.startTime)} - {formatTime(shift.endTime)}
                     <button onClick={() => {
                         const confirmed = window.confirm("Are you sure you want to delete this shift?");
@@ -138,7 +138,7 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
             {!shift && (
                 <div className="flex justify-center">
                     <input
-                        type="text"
+                        type="number"
                         placeholder="HH"
                         value={startHours}
                         onChange={(e) => setStartHours(e.target.value)}
@@ -146,7 +146,7 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
                     />
                     <p>:</p>
                     <input
-                        type="text"
+                        type="number"
                         placeholder="MM"
                         value={startMinutes}
                         onChange={(e) => setStartMinutes(e.target.value)}
@@ -162,7 +162,7 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
                     </select>
                     <p className="font-bold px-8">TO</p>
                     <input
-                        type="text"
+                        type="number"
                         placeholder="HH"
                         value={endHours}
                         onChange={(e) => setEndHours(e.target.value)}
@@ -170,7 +170,7 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
                     />
                     <p>:</p>
                     <input
-                        type="text"
+                        type="number"
                         placeholder="MM"
                         value={endMinutes}
                         onChange={(e) => setEndMinutes(e.target.value)}
