@@ -47,6 +47,21 @@ export default function Dashboard() {
 
     const [ users, setUsers ] = useState<User[]>([]);
 
+    const postShifts = async () => {
+        const body = {
+            startDate: start,
+            endDate: endOfLastDay,
+        }
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/post`, {
+            method: "POST",
+            headers: {
+                    "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+        })
+        alert("Shifts posted!");
+    }
+
     useEffect(() => {
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/get`)
             .then((res) => res.json())
@@ -92,6 +107,7 @@ export default function Dashboard() {
                         Next Week
                     </button>
                 </div>
+                <button onClick={postShifts} className="bg-gray-700 p-3 rounded-md hover:bg-gray-900">Post Shifts</button>
             </div>
             <div className="2xl:absolute self-center 2xl:top-8 2xl:left-8 flex gap-x-4">
                 <a href="/payperiod" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Pay Periods</a>
