@@ -106,6 +106,7 @@ export const getShifts = async (req, res) => {
             username: shift.user.username,
             startTime: shift.startTime,
             endTime: shift.endTime,
+            isPosted: shift.isPosted,
         }))
         res.json(data);
     }
