@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { parseISO, differenceInMinutes } from "date-fns";
 import { fromZonedTime } from 'date-fns-tz';
 
@@ -15,10 +15,38 @@ interface EmployeeHours {
   [username: string]: number;
 }
 
+interface User {
+    id: number;
+    username: string;
+    payRate: number;
+}
+
+
 export default function HourCalculator() {
     const [startDate, setStartDate] = useState<string>("");
     const [endDate, setEndDate] = useState<string>("");
     const [hoursWorked, setHoursWorked] = useState<EmployeeHours>({});
+    const [ users, setUsers ] = useState<User[]>([]);
+    const [ totalHours, setTotalHours ] = useState(0);
+    const grandTotalPay = Object.entries(hoursWorked).reduce((sum, [username, hours]) => {
+        const user = users.find(u => u.username === username);
+        const payRate = user?.payRate ?? 0;
+        return sum + hours * payRate;
+    }, 0);
+    const getUsers = async () => {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/getall`)
+            .then((res) => res.json())
+            .then((data) => {
+                setUsers(data.users);
+            })
+            .catch((error) => {
+                console.error("Error getting users from backend: ", error)
+            })
+    };
+
+    useEffect(() => {
+        getUsers();
+    }, []);
 
     const fetchShifts = async () => {
         if (!startDate || !endDate) {
@@ -35,7 +63,8 @@ export default function HourCalculator() {
             if (!response.ok) throw new Error("Failed to fetch shifts");
 
             const data: Shift[] = await response.json();
-
+            
+            let countHours = 0;
             const totals: EmployeeHours = {};
             for (const shift of data) {
                 const shiftStart = parseISO(shift.startTime);
@@ -44,9 +73,11 @@ export default function HourCalculator() {
                 const hours = minutes / 60;
 
                 totals[shift.username] = (totals[shift.username] || 0) + hours;
+                countHours += hours;
             }
             
             setHoursWorked(totals);
+            setTotalHours(countHours);
         } 
         catch (error) {
             console.error(error);
@@ -91,12 +122,21 @@ export default function HourCalculator() {
                 <></>
             ) : (
             <ul className="space-y-2 mt-4">
-                {Object.entries(hoursWorked).map(([username, hours]) => (
-                <li key={username} className="flex justify-between border-b pb-1">
-                    <span>{username}</span>
-                    <span>{hours.toFixed(2)} hours</span>
+                {Object.entries(hoursWorked).map(([username, hours]) => {
+                    const user = users.find(u => u.username === username);
+                    const payRate = user?.payRate ?? 0;
+                    const totalPay = hours * payRate;
+                    return (
+                        <li key={username} className="flex justify-between border-b pb-1">
+                            <span>{username}</span>
+                            <span>{hours.toFixed(2)} hours (${totalPay.toFixed(2)})</span>
+                        </li>
+                    );
+                })}
+                <li key="total" className="flex justify-between border-b pb-1">
+                    <span>Total</span>
+                    <span>{totalHours} hours (${grandTotalPay.toFixed(2)})</span>
                 </li>
-                ))}
             </ul>
             )}
         </div>
