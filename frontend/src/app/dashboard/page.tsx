@@ -54,6 +54,7 @@ export default function Dashboard() {
         }
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/post`, {
             method: "POST",
+            credentials: "include",
             headers: {
                     "Content-Type": "application/json",
             },
@@ -63,7 +64,9 @@ export default function Dashboard() {
     }
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/get`)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/get`, {
+            credentials: "include",
+        })
             .then((res) => res.json())
             .then((data) => {
                 setUsers(data.users)

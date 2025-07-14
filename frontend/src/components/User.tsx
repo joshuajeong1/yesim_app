@@ -21,6 +21,7 @@ export default function User({username, id, payRate, onRefresh}:ChildProps) {
         try {
             const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/update`, {
                 method: "POST",
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userId: id, newPay: newRate }),
             });
@@ -38,6 +39,7 @@ export default function User({username, id, payRate, onRefresh}:ChildProps) {
     const handleDelete = async () => {
         try {
             await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/${id}`, {
+                credentials: "include",
                 method: "DELETE"
             });
             onRefresh();

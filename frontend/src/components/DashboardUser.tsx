@@ -74,6 +74,7 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
         }
         try {
             await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/edit`, {
+                credentials: "include",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -91,6 +92,7 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
     const removeShift = async () => {
         try {
             await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/${shift.id}`, {
+                credentials: "include",
                 method: "DELETE"
             });
             onRefresh();
@@ -121,6 +123,7 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
 
         try {
             await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/new`, {
+                credentials: "include",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

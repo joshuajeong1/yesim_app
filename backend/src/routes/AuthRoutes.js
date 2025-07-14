@@ -32,11 +32,17 @@ router.post("/login", async (req, res) => {
         { expiresIn: "7d" }
     );
 
-    res.json({ token })
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    })
+    res.json({message: "Login successful!" });
 });
 
 router.post("/verify", async (req, res) => {
-    const { token } = req.body;
+    const token = req.cookies.token;
     if(!token) {
         return res.status(401).json({error: "Missing JWT token"});
     }

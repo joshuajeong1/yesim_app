@@ -22,11 +22,12 @@ export async function middleware(req: NextRequest) {
         try {
             const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/verify`, {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
+                    "Cookie": req.headers.get("cookie") || "",
                 },
-                body: JSON.stringify({ token }),
-            });
+            })
 
             if(!resp.ok) {
                 throw new Error("Invalid token");
@@ -80,10 +81,11 @@ export async function middleware(req: NextRequest) {
         try {
             const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/verify`, {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
+                    "Cookie": req.headers.get("cookie") || "",
                 },
-                body: JSON.stringify({token}),
             })
             if(!resp.ok) {
                 throw new Error("Invalid token");

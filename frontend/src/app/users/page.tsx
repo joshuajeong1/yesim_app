@@ -19,6 +19,7 @@ export default function Users() {
         try {
             const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/new`, {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -38,7 +39,9 @@ export default function Users() {
     }
 
     const getUsers = async () => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/getall`)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/getall`, {
+            credentials: "include",
+        })
             .then((res) => res.json())
             .then((data) => {
                 setUsers(data.users);

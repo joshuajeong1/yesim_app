@@ -1,5 +1,4 @@
 "use client"
-import Cookies from "js-cookie";
 import { useRouter } from 'next/navigation';
 import { useState } from 'react'
 
@@ -8,12 +7,11 @@ async function login(username: string, password : string) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
+    credentials: "include",
   });
-
+  console.log(res.status)
   if (!res.ok) throw new Error("Invalid credentials");
-
-  const { token } = await res.json();
-  Cookies.set("token", token, { expires: 7 });
+  
 }
 
 export default function Login() {

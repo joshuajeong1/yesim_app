@@ -34,7 +34,9 @@ export default function HourCalculator() {
         return sum + hours * payRate;
     }, 0);
     const getUsers = async () => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/getall`)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/getall`, {
+            credentials: "include",
+        })
             .then((res) => res.json())
             .then((data) => {
                 setUsers(data.users);

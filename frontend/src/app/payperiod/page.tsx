@@ -27,7 +27,9 @@ export default function PayPeriod() {
     const [ periods, setPeriods ] = useState<PayPeriod[]>([]);
 
     const getPeriods = async () => {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/period/get`)
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/period/get`, {
+            credentials: "include",
+        })
             .then((res) => res.json())
             .then((data) => {
                 setPeriods(data)
@@ -39,6 +41,7 @@ export default function PayPeriod() {
     const addAuto = async () => {
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/period/auto`, {
             method: "POST",
+            credentials: "include",
         })
         getPeriods();
     }
