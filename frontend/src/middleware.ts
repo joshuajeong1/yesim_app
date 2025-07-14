@@ -72,8 +72,9 @@ export async function middleware(req: NextRequest) {
     }
     if(url.pathname.startsWith("/dashboard") || url.pathname.startsWith("/payperiod") || url.pathname.startsWith("/users")) {
         const token = req.cookies.get("token")?.value;
-
+        console.log(token);
         if(!token) {
+            console.log("No cookie found!")
             url.pathname = "/login";
             return NextResponse.redirect(url);
         }
@@ -88,10 +89,12 @@ export async function middleware(req: NextRequest) {
                 },
             })
             if(!resp.ok) {
+                console.log("Token is invalid.");
                 throw new Error("Invalid token");
             }
             const data = await resp.json();
             if(!data.isAdmin) {
+                console.log("isAdmin false");
                 return NextResponse.redirect(new URL("/login", req.url));
             }
             return NextResponse.next();
