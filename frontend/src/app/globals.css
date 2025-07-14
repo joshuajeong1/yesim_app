@@ -19,6 +19,25 @@
   }
 }
 
+@media print {
+  .no-print {
+    display: none;
+    
+  }
+  .border {
+    border-color: black !important;
+  }
+  .print-black {
+    color: black;
+  }
+  body, .bg-slate-800 {
+    background: white !important;
+  }
+  .page-break {
+    page-break-before: always;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

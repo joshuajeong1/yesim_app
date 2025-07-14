@@ -84,8 +84,8 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
         catch (error) {
             alert("Error updating shift: " + error);
         }
-        alert("Shift edited!");
         onRefresh();
+        alert("Shift edited!");
     }
 
     const removeShift = async () => {

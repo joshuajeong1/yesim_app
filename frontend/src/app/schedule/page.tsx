@@ -88,18 +88,18 @@ export default function Schedule() {
         setDate((prev) => addDays(prev, 7));
     };
     return (
-        <div className="bg-slate-800 w-screen min-h-screen text-white">
+        <div className="bg-slate-800 min-h-screen text-white">
             <div className="flex flex-col items-center p-8">
-                <h2 className="font-bold text-xl md:text-3xl">
+                <h2 className="font-bold text-xl md:text-3xl print-black">
                     Week of {format(start, "MMM d")} to {format(end, "MMM d")}
                 </h2>
                 <div className="p-4 flex gap-5">
-                    <button className="bg-gray-700 p-3 rounded-md hover:bg-gray-900" onClick={goPrevWeek}>Previous Week</button>
-                    <button className="bg-gray-700 p-3 rounded-md hover:bg-gray-900" onClick={goNextWeek} style={{ marginLeft: "1rem" }}>
+                    <button className="no-print bg-gray-700 p-3 rounded-md hover:bg-gray-900" onClick={goPrevWeek}>Previous Week</button>
+                    <button className="no-print bg-gray-700 p-3 rounded-md hover:bg-gray-900" onClick={goNextWeek} style={{ marginLeft: "1rem" }}>
                         Next Week
                     </button>
                 </div>
-                <div className="md:absolute md:right-16 md:top-8 flex flex-col gap-y-3">
+                <div className="no-print md:absolute md:right-16 md:top-8 flex flex-col gap-y-3">
                     <select
                         value={selectedUser.id}
                         onChange={(e) => {
@@ -119,7 +119,7 @@ export default function Schedule() {
                     <a href="/monthly" className="self-center">Calendar View</a>
                 </div>
             </div>
-            <div className="grid grid-rows-7 md:grid-cols-7 px-2">
+            <div className="grid grid-cols-1 md:grid-cols-7 px-2">
                 <ScheduleDay day="Sun" date={start} shifts={sortedShifts[0]} />
                 <ScheduleDay day="Mon" date={addDays(start, 1)} shifts={sortedShifts[1]} />
                 <ScheduleDay day="Tues" date={addDays(start, 2)} shifts={sortedShifts[2]} />

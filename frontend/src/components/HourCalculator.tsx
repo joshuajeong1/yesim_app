@@ -135,7 +135,7 @@ export default function HourCalculator() {
                 })}
                 <li key="total" className="flex justify-between border-b pb-1">
                     <span>Total</span>
-                    <span>{totalHours} hours (${grandTotalPay.toFixed(2)})</span>
+                    <span>{totalHours.toFixed(2)} hours (${grandTotalPay.toFixed(2)})</span>
                 </li>
             </ul>
             )}
