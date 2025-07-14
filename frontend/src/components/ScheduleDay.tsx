@@ -15,7 +15,7 @@ export default function ScheduleDay({day, date, shifts = []} : ScheduleProps) {
 
     return (
         <div className="flex flex-col print-black">
-            <div className="text-center border p-4 flex flex-col bg-slate-900">
+            <div className="text-center border p-4 flex flex-col bg-slate-900 print-white">
                 <h1 className="text-lg text-gray-400">{date.getDate()}</h1>
                 <h1 className="text-xl font-bold">{day}</h1>
             </div>
@@ -24,7 +24,7 @@ export default function ScheduleDay({day, date, shifts = []} : ScheduleProps) {
                     return (
                         <div key={shift.id} className="text-sm text-center my-4 flex flex-col">
                             <p className="text-lg font-bold">{shift.username}:</p> 
-                            <p>{formatTime(shift.startTime)} - {formatTime(shift.endTime)}  </p>
+                            <p className="print-smaller">{formatTime(shift.startTime)} - {formatTime(shift.endTime)}  </p>
                         </div>
                     )
                 })}

@@ -30,7 +30,13 @@
   .print-black {
     color: black;
   }
+  .print-smaller {
+    font-size: 10pt !important;
+  }
   body, .bg-slate-800 {
+    background: white !important;
+  }
+  .print-white {
     background: white !important;
   }
   .page-break {
