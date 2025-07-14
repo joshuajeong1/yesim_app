@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FaPlus } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
 
 interface ChildProps {
     date: Date;
@@ -58,6 +59,35 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
         return newDate;
     }
     
+    const editShift = async() => {
+        const startDate = calcTime(startHours, startMinutes, startMeridian, date);
+        const endDate = calcTime(endHours, endMinutes, endMeridian, date);
+
+        if (!startDate || !endDate || startDate > endDate) {
+            alert("Start time is after end time!")
+            return;
+        }
+        const body = {
+            shiftId: shift.id,
+            newStart: startDate,
+            newEnd: endDate,
+        }
+        try {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/edit`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+            })
+        }
+        catch (error) {
+            alert("Error updating shift: " + error);
+        }
+        alert("Shift edited!");
+        onRefresh();
+    }
+
     const removeShift = async () => {
         try {
             await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/${shift.id}`, {
@@ -117,7 +147,7 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
         <div className="grid [grid-template-columns:10%_25%_65%] gap-x-3 justify-center">
             <span>{username}</span>
             {shift ? (
-                <div className="grid [grid-template-columns:70%_30%] text-emerald-500">
+                <div className="grid [grid-template-columns:70%_15%_15%] text-emerald-500">
                     {formatTime(shift.startTime)} - {formatTime(shift.endTime)}
                     <button onClick={() => {
                         const confirmed = window.confirm("Are you sure you want to delete this shift?");
@@ -129,64 +159,69 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
                     >
                             <FaTrash />
                     </button>
+                    <button onClick={editShift}
+                    className="text-white hover:text-blue-400"
+                    >
+                        <MdEdit />
+                    </button>
                 </div>
                 
             ) : (
                 <div className="text-sm text-gray-400">&nbsp;</div>
             )}
             
-            {!shift && (
-                <div className="flex justify-center">
-                    <input
-                        type="number"
-                        placeholder="HH"
-                        value={startHours}
-                        onChange={(e) => setStartHours(e.target.value)}
-                        className="text-center w-12"
-                    />
-                    <p>:</p>
-                    <input
-                        type="number"
-                        placeholder="MM"
-                        value={startMinutes}
-                        onChange={(e) => setStartMinutes(e.target.value)}
-                        className="text-center w-12"
-                    />
-                    <select
-                        value={startMeridian}
-                        onChange={(e) => setStartMeridian(e.target.value as "AM" | "PM")}
-                        className=""
-                    >
-                        <option value="AM">AM</option>
-                        <option value="PM">PM</option>
-                    </select>
-                    <p className="font-bold px-8">TO</p>
-                    <input
-                        type="number"
-                        placeholder="HH"
-                        value={endHours}
-                        onChange={(e) => setEndHours(e.target.value)}
-                        className="text-center w-12"
-                    />
-                    <p>:</p>
-                    <input
-                        type="number"
-                        placeholder="MM"
-                        value={endMinutes}
-                        onChange={(e) => setEndMinutes(e.target.value)}
-                        className="text-center w-12"
-                    />
-                    <select
-                        value={endMeridian}
-                        onChange={(e) => setEndMeridian(e.target.value as "AM" | "PM")}
-                        className=""
-                    >
-                        <option value="AM">AM</option>
-                        <option value="PM">PM</option>
-                    </select>
-                    <button onClick={addShift} className="pl-5 hover:text-green-400"><FaPlus /></button>
-                </div>  
-            )}          
+            
+            <div className="flex justify-center">
+                <input
+                    type="number"
+                    placeholder="HH"
+                    value={startHours}
+                    onChange={(e) => setStartHours(e.target.value)}
+                    className="text-center w-12"
+                />
+                <p>:</p>
+                <input
+                    type="number"
+                    placeholder="MM"
+                    value={startMinutes}
+                    onChange={(e) => setStartMinutes(e.target.value)}
+                    className="text-center w-12"
+                />
+                <select
+                    value={startMeridian}
+                    onChange={(e) => setStartMeridian(e.target.value as "AM" | "PM")}
+                    className=""
+                >
+                    <option value="AM">AM</option>
+                    <option value="PM">PM</option>
+                </select>
+                <p className="font-bold px-8">TO</p>
+                <input
+                    type="number"
+                    placeholder="HH"
+                    value={endHours}
+                    onChange={(e) => setEndHours(e.target.value)}
+                    className="text-center w-12"
+                />
+                <p>:</p>
+                <input
+                    type="number"
+                    placeholder="MM"
+                    value={endMinutes}
+                    onChange={(e) => setEndMinutes(e.target.value)}
+                    className="text-center w-12"
+                />
+                <select
+                    value={endMeridian}
+                    onChange={(e) => setEndMeridian(e.target.value as "AM" | "PM")}
+                    className=""
+                >
+                    <option value="AM">AM</option>
+                    <option value="PM">PM</option>
+                </select>
+                <button disabled={!!shift} onClick={addShift} className={`pl-5 ${!!shift ? "text-gray-400 cursor-not-allowed" : "hover:text-green-400"}`}><FaPlus /></button>
+            </div>  
+                      
         </div>
     )
 }

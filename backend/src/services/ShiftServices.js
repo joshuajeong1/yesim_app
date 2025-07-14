@@ -16,7 +16,7 @@ export async function getShiftByUserAndDay(date, userId) {
 
 export async function editShift(shiftId, newStart, newEnd) {
     try {
-        const updatedUser = await prisma.shift.update({
+        const updatedShift = await prisma.shift.update({
             where: {
                 id: shiftId,
             },
@@ -25,7 +25,8 @@ export async function editShift(shiftId, newStart, newEnd) {
                 endTime: newEnd,
             },
         });
-        return updatedUser;
+        await recalculateHoursWorked(updatedShift.userId, updatedShift.startTime, updatedShift.endTime);
+        return updatedShift;
     }
     catch (error) {
         console.log("Internal server error");
