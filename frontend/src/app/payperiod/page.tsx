@@ -52,6 +52,7 @@ export default function PayPeriod() {
         <div className="bg-slate-800 w-screen min-h-screen text-white">
             <div className="p-8">
                 <h1 className="text-2xl font-bold text-center">Pay Periods</h1>
+                <a className="border rounded-md p-4" href="/dashboard">Back to Dashboard</a>
                 <div className="flex flex-col items-center py-8 gap-y-4">
                     {periods.map((period : PayPeriod) => {
                         return (
