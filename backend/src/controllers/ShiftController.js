@@ -24,7 +24,7 @@ export const postShift = async (req, res) => {
         return res.status(400).json("Missing start and end dates")
     }
     await postShifts(startDate, endDate);
-    return res.json(201).json("Shifts successfully posted.")
+    return res.status(201).json("Shifts successfully posted.")
 }
 export const updateShift = async (req, res) => {
     const { shiftId, newStart, newEnd } = req.body;
