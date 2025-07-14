@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { addShift, removeShift, getAllShifts, getShiftByUserAndDay, editShift } from '../services/ShiftServices.js';
+import { addShift, removeShift, getAllShifts, getShiftByUserAndDay, editShift, postShifts } from '../services/ShiftServices.js';
 const prisma = new PrismaClient();
 
 export const getShiftByUserDay = async (req, res) => {
@@ -18,6 +18,14 @@ export const getShiftByUserDay = async (req, res) => {
     return res.json( {shift} )
 }
 
+export const postShift = async (req, res) => {
+    const { startDate, endDate } = req.body;
+    if(!startDate || !endDate) {
+        return res.status(400).json("Missing start and end dates")
+    }
+    await postShifts(startDate, endDate);
+    return res.json(201).json("Shifts successfully posted.")
+}
 export const updateShift = async (req, res) => {
     const { shiftId, newStart, newEnd } = req.body;
     const id = Number(shiftId);

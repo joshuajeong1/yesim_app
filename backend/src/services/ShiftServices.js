@@ -14,6 +14,26 @@ export async function getShiftByUserAndDay(date, userId) {
     })
 }
 
+export async function postShifts(startDate, endDate) {
+    try {
+        await prisma.shift.updateMany({
+            where: {
+                startTime: {
+                    gte: startDate,
+                    lte: endDate
+                }
+            },
+            data: {
+                isPosted: true,
+            }
+        })
+    }
+    catch (error) {
+        console.log("Internal server error");
+        throw error;
+    }
+}
+
 export async function editShift(shiftId, newStart, newEnd) {
     try {
         const updatedShift = await prisma.shift.update({
