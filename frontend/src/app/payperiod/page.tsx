@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import PayPeriodItem from '@/components/PayPeriod';
 import HourCalculator from '@/components/HourCalculator';
+import Cookies from "js-cookie";
+
 interface PayPeriod {
     id: number;
     startDate: string;
@@ -27,9 +29,7 @@ export default function PayPeriod() {
     const [ periods, setPeriods ] = useState<PayPeriod[]>([]);
 
     const getPeriods = async () => {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/period/get`, {
-            credentials: "include",
-        })
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/period/get`)
             .then((res) => res.json())
             .then((data) => {
                 setPeriods(data)
@@ -39,9 +39,12 @@ export default function PayPeriod() {
             })
     }
     const addAuto = async () => {
+        const token = Cookies.get("token");
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/period/auto`, {
             method: "POST",
-            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            }
         })
         getPeriods();
     }

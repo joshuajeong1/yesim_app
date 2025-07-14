@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { parseISO, differenceInMinutes } from "date-fns";
 import { fromZonedTime } from 'date-fns-tz';
+import Cookies from 'js-cookie';
 
 interface Shift {
   id: number;
@@ -34,8 +35,11 @@ export default function HourCalculator() {
         return sum + hours * payRate;
     }, 0);
     const getUsers = async () => {
+        const token = Cookies.get("token");
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/getall`, {
-            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            }
         })
             .then((res) => res.json())
             .then((data) => {

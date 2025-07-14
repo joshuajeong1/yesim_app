@@ -1,7 +1,7 @@
 import { FaTrash } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { useState } from 'react'
-
+import { useState } from 'react';
+import Cookies from 'js-cookie';
 interface ChildProps {
     username: string;
     id: number;
@@ -19,10 +19,13 @@ export default function User({username, id, payRate, onRefresh}:ChildProps) {
     const handleEdit = async () => {
         const newRate = parseFloat(payRateInput);
         try {
+            const token = Cookies.get("token");
             const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/update`, {
                 method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
                 body: JSON.stringify({ userId: id, newPay: newRate }),
             });
             if(!resp.ok) {
@@ -38,9 +41,12 @@ export default function User({username, id, payRate, onRefresh}:ChildProps) {
 
     const handleDelete = async () => {
         try {
+            const token = Cookies.get("token");
             await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/${id}`, {
-                credentials: "include",
-                method: "DELETE"
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                }
             });
             onRefresh();
             alert("User deleted!");

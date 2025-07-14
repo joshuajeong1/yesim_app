@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FaPlus } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
+import Cookies from 'js-cookie';
 
 interface ChildProps {
     date: Date;
@@ -73,11 +74,12 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
             newEnd: endDate,
         }
         try {
+            const token = Cookies.get("token");
             await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/edit`, {
-                credentials: "include",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify(body),
             })
@@ -90,9 +92,12 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
     }
 
     const removeShift = async () => {
+        const token = Cookies.get("token");
         try {
             await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/${shift.id}`, {
-                credentials: "include",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
                 method: "DELETE"
             });
             onRefresh();
@@ -122,11 +127,12 @@ export default function DashboardUser({ date, username, id, shifts, onRefresh }:
         }
 
         try {
+            const token = Cookies.get("token");
             await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/new`, {
-                credentials: "include",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify(body),
             });

@@ -5,7 +5,6 @@ import UserRoutes from './routes/UserRoutes.js'
 import ShiftRoutes from './routes/ShiftRoutes.js'
 import PayPeriodRoutes from './routes/PayPeriodRoutes.js'
 import authRoutes from './routes/AuthRoutes.js'
-import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -27,11 +26,9 @@ app.use(cors({
       callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: true
 }));
 
 app.use(express.json());
-app.use(cookieParser());
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });

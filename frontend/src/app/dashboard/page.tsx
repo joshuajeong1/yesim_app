@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useMemo, useCallback } from "react"
 import { format, subDays, addDays, startOfDay } from "date-fns";
+import Cookies from 'js-cookie';
 import DashboardDay from '@/components/DashboardDay'
 
 interface Week {
@@ -52,11 +53,14 @@ export default function Dashboard() {
             startDate: start,
             endDate: endOfLastDay,
         }
+
+        const token = Cookies.get("token");
+
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/post`, {
             method: "POST",
-            credentials: "include",
             headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
             },
             body: JSON.stringify(body),
         })
@@ -64,9 +68,7 @@ export default function Dashboard() {
     }
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/get`, {
-            credentials: "include",
-        })
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/get`)
             .then((res) => res.json())
             .then((data) => {
                 setUsers(data.users)

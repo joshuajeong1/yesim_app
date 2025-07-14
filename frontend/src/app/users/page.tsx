@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import User from '@/components/User'
 import { FaPlus } from "react-icons/fa";
+import Cookies from 'js-cookie';
 
 interface User {
     id: number;
@@ -16,12 +17,13 @@ export default function Users() {
     const [ newPayInput, setNewPayInput] = useState("0.00");
 
     const handleNewUser = async () => {
+        const token = Cookies.get("token");
         try {
             const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/new`, {
                 method: "POST",
-                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify({ username: newUsername, password: "", isAdmin: false, payRate: parseFloat(newPayInput)})
             })
@@ -39,8 +41,11 @@ export default function Users() {
     }
 
     const getUsers = async () => {
+        const token = Cookies.get("token");
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/getall`, {
-            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            }
         })
             .then((res) => res.json())
             .then((data) => {
