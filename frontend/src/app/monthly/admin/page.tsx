@@ -45,7 +45,7 @@ export default function MonthlyView() {
                 <h1 className="flex justify-center items-center font-bold text-2xl">{format(currentMonth, "MMMM yyyy")}</h1>
                 <button className="bg-gray-700 p-3 rounded-md hover:bg-gray-900" onClick={goNextMonth}>Next Month</button>
             </div>
-            <Calendar shifts={shifts} month={currentMonth} isAdmin={false}/>
+            <Calendar shifts={shifts} month={currentMonth} isAdmin={true}/>
         </div>
     )
 }

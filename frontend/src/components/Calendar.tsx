@@ -10,6 +10,7 @@ import {
   addDays,
   isSameDay,
 } from "date-fns";
+
 import { toZonedTime, format as tzFormat } from "date-fns-tz";
 
 interface Shift {
@@ -17,13 +18,24 @@ interface Shift {
   username: string;
   startTime: string;
   endTime: string;
+  isPosted: boolean;
 }
 interface ChildProps {
-    shifts: Shift[];
-    month: Date;
+  shifts: Shift[];
+  month: Date;
+  isAdmin: boolean;
 }
 
-export default function Calendar({ shifts, month }: ChildProps) {
+export default function Calendar({ shifts, month, isAdmin }: ChildProps) {
+  
+  let postedShifts = [];
+  if(isAdmin) {
+      postedShifts = shifts;
+  }
+  else {
+      postedShifts = shifts.filter(shift => shift.isPosted);
+  }
+
   const timezone = "America/Phoenix";
 
   const monthStart = startOfMonth(month);
@@ -60,7 +72,7 @@ export default function Calendar({ shifts, month }: ChildProps) {
       {weeks.map((week, i) => (
         <div key={i} className="grid grid-cols-7 border-b">
           {week.map((day) => {
-            const dayShifts = shifts.filter((shift) => {
+            const dayShifts = postedShifts.filter((shift) => {
               const startZoned = toZonedTime(parseISO(shift.startTime), timezone);
               return isSameDay(startZoned, day);
             });
@@ -84,7 +96,7 @@ export default function Calendar({ shifts, month }: ChildProps) {
                   const endZoned = toZonedTime(parseISO(shift.endTime), timezone);
 
                   return (
-                    <div key={shift.id} className="text-sm">
+                    <div key={shift.id} className={`text-sm ${shift.isPosted ? 'text-white' : 'text-yellow-400'}`}>
                       {shift.username[0]}:{" "}
                       {tzFormat(startZoned, "h:mm a", { timeZone: timezone })} -{" "}
                       {tzFormat(endZoned, "h:mm a", { timeZone: timezone })}

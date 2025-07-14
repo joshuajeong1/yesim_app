@@ -122,13 +122,13 @@ export default function Schedule() {
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-7 px-2">
-                <ScheduleDay day="Sun" date={start} shifts={sortedShifts[0]} isAdmin={false}/>
-                <ScheduleDay day="Mon" date={addDays(start, 1)} shifts={sortedShifts[1]} isAdmin={false} />
-                <ScheduleDay day="Tues" date={addDays(start, 2)} shifts={sortedShifts[2]} isAdmin={false}/>
-                <ScheduleDay day="Wed" date={addDays(start, 3)} shifts={sortedShifts[3]} isAdmin={false}/>
-                <ScheduleDay day="Thurs" date={addDays(start, 4)} shifts={sortedShifts[4]} isAdmin={false}/>
-                <ScheduleDay day="Fri" date={addDays(start, 5)} shifts={sortedShifts[5]} isAdmin={false}/>
-                <ScheduleDay day="Sat" date={addDays(start, 6)} shifts={sortedShifts[6]} isAdmin={false}/>
+                <ScheduleDay day="Sun" date={start} shifts={sortedShifts[0]} isAdmin={true}/>
+                <ScheduleDay day="Mon" date={addDays(start, 1)} shifts={sortedShifts[1]} isAdmin={true} />
+                <ScheduleDay day="Tues" date={addDays(start, 2)} shifts={sortedShifts[2]} isAdmin={true}/>
+                <ScheduleDay day="Wed" date={addDays(start, 3)} shifts={sortedShifts[3]} isAdmin={true}/>
+                <ScheduleDay day="Thurs" date={addDays(start, 4)} shifts={sortedShifts[4]} isAdmin={true}/>
+                <ScheduleDay day="Fri" date={addDays(start, 5)} shifts={sortedShifts[5]} isAdmin={true}/>
+                <ScheduleDay day="Sat" date={addDays(start, 6)} shifts={sortedShifts[6]} isAdmin={true}/>
             </div>
         </div>
     );
