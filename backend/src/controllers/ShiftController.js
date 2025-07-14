@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { addShift, removeShift, getAllShifts, getShiftByUserAndDay } from '../services/ShiftServices.js';
+import { addShift, removeShift, getAllShifts, getShiftByUserAndDay, editShift } from '../services/ShiftServices.js';
 const prisma = new PrismaClient();
 
 export const getShiftByUserDay = async (req, res) => {
@@ -16,6 +16,23 @@ export const getShiftByUserDay = async (req, res) => {
     let dateObj = new Date(date);
     const shift = await getShiftByUserAndDay(dateObj, userId);
     return res.json( {shift} )
+}
+
+export const updateShift = async (req, res) => {
+    const { shiftId, newStart, newEnd } = req.body;
+    const id = Number(shiftId);
+
+    if(isNaN(id)) {
+        return res.status(400).json("Shift ID was not a number!");
+    }
+    else if (!newStart || !newEnd) {
+        return res.status(400).json("Start and end times are malformed");
+    }
+
+    let startDate = new Date(newStart);
+    let endDate = new Date(newEnd)
+    const shift = await editShift(id, startDate, endDate);
+    return res.status(201).json(shift);
 }
 
 export const createShift = async (req, res) => {
