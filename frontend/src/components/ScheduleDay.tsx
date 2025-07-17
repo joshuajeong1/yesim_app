@@ -33,8 +33,8 @@ export default function ScheduleDay({day, date, shifts = [], isAdmin} : Schedule
                 {postedShifts.map((shift: Shift) => {
                     return (
                         <div key={shift.id} className="text-sm text-center my-4 flex flex-col">
-                            <p className={`text-lg font-bold ${shift.isPosted ? 'text-white' : 'text-yellow-400'}`}>{shift.username}:</p> 
-                            <p className={`print-smaller ${shift.isPosted ? 'text-white' : 'text-yellow-400'}`}>{formatTime(shift.startTime)} - {formatTime(shift.endTime)}  </p>
+                            <p className={`text-lg print-black font-bold ${shift.isPosted ? 'text-white' : 'text-yellow-400'}`}>{shift.username}:</p> 
+                            <p className={`print-black print-smaller ${shift.isPosted ? 'text-white' : 'text-yellow-400'}`}>{formatTime(shift.startTime)} - {formatTime(shift.endTime)}  </p>
                         </div>
                     )
                 })}
