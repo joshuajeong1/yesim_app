@@ -87,6 +87,40 @@ export const deleteShift = async (req, res) => {
     }
 }
 
+export const autoPrevWeek = async (req, res) => {
+
+    const { start, end } = req.body;
+    if(!start || !end) {
+        return res.status(400).json({ error: "Missing start or end time" })
+    }
+
+    try {
+        const startDate = new Date(start)
+        const endDate = new Date(end)
+        const lastStart = new Date(start)
+        lastStart.setDate(startDate.getDate() - 7)
+        const lastEnd = new Date(end)
+        lastEnd.setDate(endDate.getDate() - 7)
+
+        const shifts = await getAllShifts(lastStart, lastEnd)
+
+        const newShifts = []
+        for (const shift of shifts) {
+            const newStart = new Date(shift.startTime);
+            const newEnd = new Date(shift.endTime);
+            newStart.setDate(newStart.getDate() + 7);
+            newEnd.setDate(newEnd.getDate() + 7);
+            const newShift = await addShift(shift.user.id, newStart, newEnd)
+            newShifts.push(newShift)
+        }
+        res.status(201).json({newShifts});
+    }
+    catch (error) {
+        console.error("Error auto creating shifts: ", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}
+
 export const getShifts = async (req, res) => {
     const { start, end } = req.query;
 

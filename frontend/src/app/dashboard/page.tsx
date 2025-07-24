@@ -48,6 +48,26 @@ export default function Dashboard() {
 
     const [ users, setUsers ] = useState<User[]>([]);
 
+    const autoShifts = async () => {
+        const body = {
+            start: start,
+            end: endOfLastDay,
+        }
+
+        const token = Cookies.get("token");
+
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shift/auto`, {
+            method: "POST",
+            headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify(body),
+        })
+        fetchShifts();
+        alert("Shifts copied!");
+    }
+
     const postShifts = async () => {
         const body = {
             startDate: start,
@@ -112,7 +132,10 @@ export default function Dashboard() {
                         Next Week
                     </button>
                 </div>
-                <button onClick={postShifts} className="bg-gray-700 p-3 rounded-md hover:bg-gray-900">Post Shifts</button>
+                <div className="flex flex-col gap-y-2">
+                    <button onClick={postShifts} className="bg-gray-700 p-3 rounded-md hover:bg-gray-900">Post Shifts</button>
+                    <button onClick={autoShifts} className="bg-gray-700 p-3 rounded-md hover:bg-gray-900">Copy Last Week</button>
+                </div>
             </div>
             <div className="2xl:absolute self-center 2xl:top-8 2xl:left-8 flex gap-x-4">
                 <a href="/payperiod" target="_blank" rel="noopener noreferrer" className="p-4 border rounded-md">Pay Periods</a>

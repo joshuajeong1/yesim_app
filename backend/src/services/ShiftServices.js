@@ -1,4 +1,6 @@
 import { PrismaClient } from '@prisma/client';
+import { toZonedTime, fromZonedTime } from 'date-fns-tz'
+import { startOfDay, endOfDay } from 'date-fns'
 const prisma = new PrismaClient();
 
 export async function getShiftByUserAndDay(date, userId) {
@@ -65,6 +67,7 @@ export async function getAllShifts(startDate, endDate) {
             user: {
                 select: {
                     username: true,
+                    id: true,
                 },
             },
         },
@@ -104,6 +107,26 @@ export async function removeShift(shiftId) {
 }
 
 export async function addShift(userId, startTime, endTime) {
+    const timeZone = 'America/Phoenix';
+
+    const arizonaStart = toZonedTime(new Date(startTime), timeZone);
+    const dayStartInAZ = startOfDay(arizonaStart);
+    const dayEndInAZ = endOfDay(arizonaStart);
+    const dayStartUTC = fromZonedTime(dayStartInAZ, timeZone);
+    const dayEndUTC = fromZonedTime(dayEndInAZ, timeZone);
+    const existingShift = await prisma.shift.findFirst({
+        where: {
+            userId,
+            startTime: {
+                gte: dayStartUTC,
+                lte: dayEndUTC,
+            },
+        },
+    });
+
+    if (existingShift) {
+        return existingShift;
+    }
 
     const shift = await prisma.shift.create({
         data: {

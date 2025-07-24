@@ -1,5 +1,5 @@
 import express from 'express';
-import { createShift, deleteShift, getShiftByUserDay, getShifts, postShift, updateShift } from '../controllers/ShiftController.js';
+import { createShift, deleteShift, getShiftByUserDay, getShifts, postShift, updateShift, autoPrevWeek } from '../controllers/ShiftController.js';
 import { authenticateJWT } from '../middleware/authenticateToken.js';
 import { requireAdmin } from '../middleware/requireAdmin.js';
 const router = express.Router();
@@ -10,4 +10,5 @@ router.get("/get", getShifts);
 router.get("/userday", getShiftByUserDay);
 router.post('/edit', authenticateJWT, requireAdmin, updateShift);
 router.post('/post', authenticateJWT, requireAdmin, postShift);
+router.post('/auto', authenticateJWT, requireAdmin, autoPrevWeek);
 export default router;
