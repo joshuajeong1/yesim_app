@@ -12,6 +12,7 @@ import {
 } from "date-fns";
 
 import { toZonedTime, format as tzFormat } from "date-fns-tz";
+import { useMemo } from 'react';
 
 interface Shift {
   id: number;
@@ -24,9 +25,15 @@ interface ChildProps {
   shifts: Shift[];
   month: Date;
   isAdmin: boolean;
+  selectedUser: User;
 }
 
-export default function Calendar({ shifts, month, isAdmin }: ChildProps) {
+interface User {
+    id: number;
+    username: string;
+}
+
+export default function Calendar({ shifts, month, isAdmin, selectedUser }: ChildProps) {
   
   let postedShifts = [];
   if(isAdmin) {
@@ -35,6 +42,11 @@ export default function Calendar({ shifts, month, isAdmin }: ChildProps) {
   else {
       postedShifts = shifts.filter(shift => shift.isPosted);
   }
+  const defaultUser: User = useMemo(() => ({
+              id: -1,
+              username: "All Users",
+  }), []);
+  const filteredShifts = selectedUser.id !== defaultUser.id ? postedShifts.filter((shift: Shift) => shift.username === selectedUser.username) : postedShifts;
 
   const timezone = "America/Phoenix";
 
@@ -72,7 +84,7 @@ export default function Calendar({ shifts, month, isAdmin }: ChildProps) {
       {weeks.map((week, i) => (
         <div key={i} className="grid grid-cols-7 border-b">
           {week.map((day) => {
-            const dayShifts = postedShifts.filter((shift) => {
+            const dayShifts = filteredShifts.filter((shift) => {
               const startZoned = toZonedTime(parseISO(shift.startTime), timezone);
               return isSameDay(startZoned, day);
             });

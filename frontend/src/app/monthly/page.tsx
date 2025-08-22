@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { startOfMonth, endOfMonth, formatISO, subMonths, addMonths, format } from "date-fns";
 import Calendar from '@/components/Calendar';
 
@@ -11,11 +11,34 @@ interface Shift {
   endTime: string;
   isPosted: boolean;
 }
+interface User {
+    id: number;
+    username: string;
+}
 
 export default function MonthlyView() {
     const [shifts, setShifts] = useState<Shift[]>([]);
     const [currentMonth, setCurrentMonth] = useState(new Date());
+    
+    const defaultUser: User = useMemo(() => ({
+            id: -1,
+            username: "All Users",
+        }), []);
+    
+    const [ users, setUsers ] = useState<User[]>([]);
+    const [ selectedUser, setSelectedUser ] = useState<User>(defaultUser);
 
+    useEffect(() => {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/get`)
+            .then((res) => res.json())
+            .then((data) => {
+                const allUsers = [defaultUser, ...data.users];
+                setUsers(allUsers);
+            })
+            .catch((error) => {
+                console.error("Error getting users from backend: ", error)
+            })
+    }, [defaultUser]);
     useEffect(() => {
         const fetchShifts = async () => {
         const start = startOfMonth(currentMonth);
@@ -45,7 +68,25 @@ export default function MonthlyView() {
                 <h1 className="flex justify-center items-center font-bold text-2xl">{format(currentMonth, "MMMM yyyy")}</h1>
                 <button className="bg-gray-700 p-3 rounded-md hover:bg-gray-900" onClick={goNextMonth}>Next Month</button>
             </div>
-            <Calendar shifts={shifts} month={currentMonth} isAdmin={false}/>
+            <div className="no-print md:absolute md:right-16 md:top-8 flex flex-col gap-y-3">
+                <select
+                    value={selectedUser.id}
+                    onChange={(e) => {
+                        const id = parseInt(e.target.value, 10);
+                        const user = users.find((u) => u.id === id);
+                        if (user) {
+                            setSelectedUser(user);
+                        }
+                    }}
+                >
+                    {users.map((user : User) => {
+                        return (
+                            <option key={user.id} value={user.id}>{user.username}</option>
+                        )
+                    })}
+                </select>
+            </div>
+            <Calendar shifts={shifts} month={currentMonth} isAdmin={false} selectedUser={selectedUser}/>
         </div>
     )
 }
