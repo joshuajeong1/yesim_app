@@ -73,7 +73,7 @@ export const autoCreatePeriod = async (req, res) => {
         }
         else {
             let periodLength = 14;
-            const thirtyOneMonths = [0, 2, 4, 6, 7, 9, 11];
+            const thirtyOneMonths = [0, 2, 4, 6, 7, 8, 10, 12];
             if(thirtyOneMonths.includes(startDateUTC.getMonth()) && startDateUTC.getDate() == 16) {
                 periodLength += 1;
             }
