@@ -67,14 +67,14 @@ export const autoCreatePeriod = async (req, res) => {
         const startDateUTC = setHours(setMinutes(setSeconds(setMilliseconds(nextDayUTC, 0), 0), 0), 0);
         
         let endDateUTC;
-        if (startDateUTC.getMonth() === 1 && startDateUTC.getDate() == 16) {
+        if (startDateUTC.getMonth() === 1 && startDateUTC.getUTCDate() == 16) {
             const lastDay = lastDayOfMonth(startDateUTC);
             endDateUTC = setHours(setMinutes(setSeconds(setMilliseconds(lastDay, 0), 0), 59), 23);
         }
         else {
             let periodLength = 14;
-            const thirtyOneMonths = [0, 2, 4, 6, 7, 8, 10, 12];
-            if(thirtyOneMonths.includes(startDateUTC.getMonth()) && startDateUTC.getDate() == 16) {
+            const thirtyOneMonths = [0, 2, 4, 6, 7, 9, 11];
+            if(thirtyOneMonths.includes(startDateUTC.getMonth()) && startDateUTC.getUTCDate() == 16) {
                 periodLength += 1;
             }
             var fifteenDaysLater = addDays(startDateUTC, periodLength);
