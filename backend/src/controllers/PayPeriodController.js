@@ -60,25 +60,28 @@ export const autoCreatePeriod = async (req, res) => {
         return res.status(400).json({ error: "Previous pay periods do not exist." });
         }
         
-        const latestUTC = new Date(latestEnd.endDate);
+        const latestUTC = latestEnd.endDate;
 
-        const nextDayUTC = addDays(latestUTC, 1);
-
-        const startDateUTC = setHours(setMinutes(setSeconds(setMilliseconds(nextDayUTC, 0), 0), 0), 0);
+        const startDateUTC = new Date(latestUTC)
+        startDateUTC.setUTCHours(7,0,0,0);
         
         let endDateUTC;
-        if (startDateUTC.getMonth() === 1 && startDateUTC.getUTCDate() == 16) {
+        if (startDateUTC.getUTCMonth() === 1 && startDateUTC.getUTCDate() == 16) {
             const lastDay = lastDayOfMonth(startDateUTC);
-            endDateUTC = setHours(setMinutes(setSeconds(setMilliseconds(lastDay, 0), 0), 59), 23);
+            endDateUTC = new Date(lastDay);
+            endDateUTC.setUTCHours(6, 59, 0, 0);
+            endDateUTC.setUTCDate(endDateUTC.getUTCDate() + 1);
         }
         else {
             let periodLength = 14;
             const thirtyOneMonths = [0, 2, 4, 6, 7, 9, 11];
-            if(thirtyOneMonths.includes(startDateUTC.getMonth()) && startDateUTC.getUTCDate() == 16) {
+            if(thirtyOneMonths.includes(startDateUTC.getUTCMonth()) && startDateUTC.getUTCDate() == 16) {
                 periodLength += 1;
             }
             var fifteenDaysLater = addDays(startDateUTC, periodLength);
-            endDateUTC = setHours(setMinutes(setSeconds(setMilliseconds(fifteenDaysLater, 0), 0), 59), 23);
+            endDateUTC = new Date(fifteenDaysLater);
+            endDateUTC.setUTCHours(6, 59, 0, 0)
+            endDateUTC.setUTCDate(endDateUTC.getUTCDate() + 1);
         }
 
         const newPeriod = await prisma.payPeriod.create({
